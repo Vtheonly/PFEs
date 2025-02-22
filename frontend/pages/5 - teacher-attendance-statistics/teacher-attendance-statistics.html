@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Attendance Statistics</title>
+    <link rel="stylesheet" href="teacher-attendance-statistics.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">Attendance</div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#">Statistics</a></li>
+                    <li><a href="#">Teacher</a></li>
+                    <li><a href="#">Marks</a></li>
+                    <li><a href="#">Messages <span class="badge">14</span></a></li>
+                    <li><a href="#">Students</a></li>
+                    <li><a href="#">Reports</a></li>
+                    <li><a href="#">Settings</a></li>
+                    <li><a href="#">Add Student</a></li>
+                    <li><a href="#">Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Teacher Attendance Statistics</h1>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="filter-by">Filter by:</label>
+                        <select id="filter-by">
+                            <option value="week">Week</option>
+                            <option value="month">Month</option>
+                            <option value="semester">Semester</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="month-select">Month:</label>
+                        <select id="month-select">
+                            <option value="">Select Month</option>
+                            <option value="january">January</option>
+                            <option value="february">February</option>
+                            <!-- ... more months ... -->
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="student-select">Student:</label>
+                        <select id="student-select">
+                            <option value="all">All Students</option>
+                            <option value="student1">hiba zineb</option>
+                            <option value="student2">KECHKAR ZINEB</option>
+                            <!-- ... more students ... -->
+                        </select>
+                    </div>
+                </div>
+            </header>
+            <section class="attendance-data-section">
+                <h2>Attendance Data</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Status</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>hiba zineb</td>
+                            <td>Absent</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>BOULFRAD HALA</td>
+                            <td>Present</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>dfg</td>
+                            <td>Present</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>okoko</td>
+                            <td>Present</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>KECHKAR ZINEB</td>
+                            <td>Present</td>
+                            <td>1</td>
+                        </tr>
+                         <tr>
+                            <td>sdfgfth</td>
+                            <td>Present</td>
+                            <td>1</td>
+                        </tr>
+                         <tr>
+                            <td>qma</td>
+                            <td>Present</td>
+                            <td>1</td>
+                        </tr>
+                         <tr>
+                            <td>jnm</td>
+                            <td>Present</td>
+                            <td>1</td>
+                        </tr>
+                         <tr>
+                            <td>adfgh</td>
+                            <td>Present</td>
+                            <td>1</td>
+                        </tr>
+                         <tr>
+                            <td>qwertyuio</td>
+                            <td>Present</td>
+                            <td>1</td>
+                        </tr>
+                         <tr>
+                            <td>sdfgfh</td>
+                            <td>Present</td>
+                            <td>1</td>
+                        </tr>
+                         <tr>
+                            <td>zadfgh</td>
+                            <td>Present</td>
+                            <td>1</td>
+                        </tr>
+                         <tr>
+                            <td>hiba zineb</td>
+                            <td>Present</td>
+                            <td>2</td>
+                        </tr>
+                         <tr>
+                            <td>osososososa</td>
+                            <td>Present</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><a href="#">Show All</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
