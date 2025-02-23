@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Minimalist Messenger App</title>
+        <!-- Firebase App (the core Firebase SDK) -->
+        <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+        <!-- Firebase Authentication -->
+        <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+        <!-- Firebase Firestore -->
+        <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f5f5f5;
+            }
+
+            .container {
+                max-width: 600px;
+                margin: 20px auto;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            input[type="text"] {
+                width: calc(100% - 22px);
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+
+            button {
+                padding: 10px 20px;
+            }
+
+            #chatMessages {
+                border: 1px solid #ccc;
+                padding: 10px;
+                height: 300px;
+                overflow-y: scroll;
+                background-color: #fafafa;
+            }
+        </style>
+    </head>
+
+    <body>
+        <!-- Login Section -->
+        <div id="login" class="container">
+            <h2>Login</h2>
+            <input type="text" id="usernameInput" placeholder="Enter your username">
+            <button id="loginButton">Login</button>
+        </div>
+        <!-- Chat Setup: Choose recipient -->
+        <div id="chatSetup" class="container" style="display:none;">
+            <h2>Start a Chat</h2>
+            <input type="text" id="recipientInput" placeholder="Enter recipient username">
+            <button id="startChatButton">Start Chat</button>
+        </div>
+        <!-- Chat Session -->
+        <div id="chatSession" class="container" style="display:none;">
+            <h2>Chat Session</h2>
+            <div id="chatMessages"></div>
+            <input type="text" id="messageInput" placeholder="Type your message">
+            <button id="sendButton">Send</button>
+        </div>
+        <script>
+            // Firebase configuration (replace these with your own values)
+            const firebaseConfig = {
+                apiKey: "YOUR_API_KEY",
+                authDomain: "YOUR_AUTH_DOMAIN",
+                projectId: "YOUR_PROJECT_ID",
+                storageBucket: "YOUR_STORAGE_BUCKET",
+                messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+                appId: "YOUR_APP_ID"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            const auth = firebase.auth();
+            const db = firebase.firestore();
+            let myUsername = "";
+            let currentUser = null;
+            let chatRoomId = "";
+            let recipientUsername = "";
+            // Login: Get username and sign in anonymously
+            document.getElementById('loginButton').addEventListener('click', () => {
+                myUsername = document.getElementById('usernameInput').value.trim();
+                if (myUsername === "") {
+                    alert("Please enter your username.");
+                    return;
+                }
+                auth.signInAnonymously()
+                    .then((result) => {
+                        currentUser = result.user;
+                        document.getElementById('login').style.display = "none";
+                        document.getElementById('chatSetup').style.display = "block";
+                    })
+                    .catch((error) => {
+                        console.error("Authentication error:", error);
+                    });
+            });
+            // Start Chat: Get recipient username and create a unique chat room ID
+            document.getElementById('startChatButton').addEventListener('click', () => {
+                recipientUsername = document.getElementById('recipientInput').value.trim();
+                if (recipientUsername === "") {
+                    alert("Please enter a recipient username.");
+                    return;
+                }
+                if (recipientUsername === myUsername) {
+                    alert("You cannot chat with yourself.");
+                    return;
+                }
+                // Generate a unique chat room ID by sorting the two usernames alphabetically
+                const usernames = [myUsername, recipientUsername].sort();
+                chatRoomId = usernames.join("_");
+                document.getElementById('chatSetup').style.display = "none";
+                document.getElementById('chatSession').style.display = "block";
+                loadMessages();
+            });
+            // Send Message: Add a new message to the Firestore collection
+            document.getElementById('sendButton').addEventListener('click', () => {
+                const messageText = document.getElementById('messageInput').value.trim();
+                if (messageText === "") return;
+                db.collection('chats').doc(chatRoomId).collection('messages').add({
+                    text: messageText,
+                    username: myUsername,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                    .then(() => {
+                        document.getElementById('messageInput').value = "";
+                    })
+                    .catch((error) => {
+                        console.error("Error sending message:", error);
+                    });
+            });
+            // Load messages in real time from Firestore
+            function loadMessages() {
+                db.collection('chats').doc(chatRoomId).collection('messages')
+                    .orderBy('timestamp')
+                    .onSnapshot((snapshot) => {
+                        const chatMessagesDiv = document.getElementById('chatMessages');
+                        chatMessagesDiv.innerHTML = "";
+                        snapshot.forEach((doc) => {
+                            const message = doc.data();
+                            const messageElement = document.createElement('div');
+                            messageElement.textContent = message.username + ": " + message.text;
+                            chatMessagesDiv.appendChild(messageElement);
+                        });
+                        chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+                    });
+            }
+        </script>
+    </body>
+
+</html>
