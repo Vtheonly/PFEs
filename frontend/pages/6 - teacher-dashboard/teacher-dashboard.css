@@ -1,8 +1,10 @@
 body {
     font-family: sans-serif;
     margin: 0;
-    background-color: #f0f2f5; /* Light grey background */
-    color: #333; /* Dark grey text */
+    background-color: #f0f2f5;
+    /* Light grey background */
+    color: #333;
+    /* Dark grey text */
 }
 
 .dashboard-container {
@@ -12,21 +14,26 @@ body {
 /* Sidebar Styles */
 .sidebar {
     width: 250px;
-    background-color: #e0e7ff; /* Light blue sidebar background - similar to Tailwind indigo-100 */
+    background-color: #e0e7ff;
+    /* Light blue sidebar background - similar to Tailwind indigo-100 */
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-    height: 100vh; /* Full height sidebar */
-    position: fixed; /* Fixed sidebar */
+    height: 100vh;
+    /* Full height sidebar */
+    position: fixed;
+    /* Fixed sidebar */
     top: 0;
     left: 0;
-    overflow-y: auto; /* Enable scroll if content is long */
+    overflow-y: auto;
+    /* Enable scroll if content is long */
 }
 
 .sidebar-header {
     font-size: 1.5em;
     font-weight: bold;
     margin-bottom: 20px;
-    color: #4f46e5; /* Indigo color for header - similar to Tailwind indigo-500 */
+    color: #4f46e5;
+    /* Indigo color for header - similar to Tailwind indigo-500 */
 }
 
 .sidebar-nav ul {
@@ -49,11 +56,13 @@ body {
 }
 
 .sidebar-nav a:hover {
-    background-color: #d1d5db; /* Light grey on hover - similar to Tailwind gray-300 */
+    background-color: #d1d5db;
+    /* Light grey on hover - similar to Tailwind gray-300 */
 }
 
 .sidebar-nav .badge {
-    background-color: #ef4444; /* Red badge - similar to Tailwind red-500 */
+    background-color: #ef4444;
+    /* Red badge - similar to Tailwind red-500 */
     color: white;
     padding: 4px 8px;
     border-radius: 10px;
@@ -66,7 +75,8 @@ body {
 .main-content {
     flex-grow: 1;
     padding: 20px;
-    margin-left: 250px; /* Match sidebar width */
+    margin-left: 250px;
+    /* Match sidebar width */
 }
 
 .main-header {
@@ -97,7 +107,8 @@ body {
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background-color: #9ca3af; /* Grey profile icon - similar to Tailwind gray-400 */
+    background-color: #9ca3af;
+    /* Grey profile icon - similar to Tailwind gray-400 */
     color: white;
     display: flex;
     justify-content: center;
@@ -118,14 +129,16 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
-    flex: 1; /* Distribute space evenly */
+    flex: 1;
+    /* Distribute space evenly */
 }
 
 .progress-circle {
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    background-color: #4ade80; /* Green progress circle - similar to Tailwind green-500 */
+    background-color: #4ade80;
+    /* Green progress circle - similar to Tailwind green-500 */
     color: white;
     display: flex;
     justify-content: center;
@@ -159,7 +172,8 @@ body {
     font-weight: bold;
 }
 
-.form-group input[type="date"], .form-group input[type="time"] {
+.form-group input[type="date"],
+.form-group input[type="time"] {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -168,7 +182,8 @@ body {
 }
 
 .open-attendance-button {
-    background-color: #3b82f6; /* Blue button */
+    background-color: #3b82f6;
+    /* Blue button */
     color: white;
     padding: 10px 20px;
     border: none;
@@ -200,19 +215,23 @@ body {
     border-collapse: collapse;
 }
 
-.students-section th, .students-section td {
+.students-section th,
+.students-section td {
     padding: 8px 12px;
-    border-bottom: 1px solid #ddd; /* Light grey table border */
+    border-bottom: 1px solid #ddd;
+    /* Light grey table border */
     text-align: left;
 }
 
 .students-section th {
-    background-color: #f9f9f9; /* Very light grey header background */
+    background-color: #f9f9f9;
+    /* Very light grey header background */
     font-weight: bold;
 }
 
 .students-section tbody tr:last-child td {
-    border-bottom: none; /* No border for the last row */
+    border-bottom: none;
+    /* No border for the last row */
 }
 
 .students-section tbody tr:last-child td a {
@@ -224,6 +243,8 @@ body {
 }
 
 /* Messages Section */
+
+
 .messages-section {
     background-color: white;
     padding: 20px;
@@ -240,18 +261,18 @@ body {
     display: flex;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid #eee; /* Very light grey separator */
+    border-bottom: 1px solid #eee;
 }
 
 .message-item:last-child {
-    border-bottom: none; /* No border for the last message */
+    border-bottom: none;
 }
 
 .message-icon {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #ffc23d; /* Yellow message icon - similar to Tailwind yellow-400 */
+    background-color: #ffc23d;
     color: white;
     display: flex;
     justify-content: center;
@@ -273,4 +294,12 @@ body {
 .message-content p:nth-child(2) {
     font-size: 0.9em;
     color: #777;
+}
+
+
+
+
+.chat-section {
+    width: 80vw;
+    height: 80vh;
 }
