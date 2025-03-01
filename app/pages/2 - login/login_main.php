@@ -57,7 +57,7 @@ function validateTeacherLogin($email, $password) {
     
     try {
         // Verify teacher-specific conditions
-        $stmt = $conn->prepare("SELECT user_id, name, password, department FROM Users WHERE email = ? AND role = 'teacher'");
+        $stmt = $conn->prepare("SELECT user_id, name, password FROM Users WHERE email = ? AND role = 'teacher'");
         if (!$stmt) {
             error_log("Prepare failed: " . $conn->error);
             return ["success" => false, "message" => "Database error"];
@@ -78,7 +78,6 @@ function validateTeacherLogin($email, $password) {
                 $_SESSION['user_id'] = $teacher['user_id'];
                 $_SESSION['name'] = $teacher['name'];
                 $_SESSION['role'] = 'teacher';
-                $_SESSION['department'] = $teacher['department'];
                 return ["success" => true, "message" => "Login successful"];
             }
         }
