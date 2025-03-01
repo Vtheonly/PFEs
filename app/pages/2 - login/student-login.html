@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login</title>
+    <link rel="stylesheet" href="login.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(form);
+                fetch('login_main.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json().catch(() => null))
+                .then(data => {
+                    if (data && data.success) {
+                        window.location.href = '../8 - student-dashboard/student-dashboard.html';
+                    } else {
+                        const message = data ? data.message : 'Login failed. Please try again.';
+                        alert(message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Login error:', error);
+                    alert('An error occurred during login. Please try again.');
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h2>Student Login</h2>
+            <form method="post">
+                <div class="input-group">
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="login-button">Login</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
