@@ -5,38 +5,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageInput = document.getElementById('message-input');
     const sendButton = document.getElementById('send-button');
 
-    // Dummy User Data (replace with backend data in real app)
-    const users = [
-        { id: 1, name: 'Alice', lastMessage: 'Hello!' },
-        { id: 2, name: 'Bob', lastMessage: 'How are you?' },
-        { id: 3, name: 'Charlie', lastMessage: 'Good morning' },
-        { id: 4, name: 'David', lastMessage: 'See you later' }
-    ];
-
-    // Dummy Conversation Data (replace with backend data in real app)
-    const conversations = {
-        1: [ // User ID 1's conversation
-            { sender: 'me', text: 'Hi Alice!', timestamp: '10:00 AM' },
-            { sender: 'them', text: 'Hello!', timestamp: '10:01 AM' }
-        ],
-        2: [ // User ID 2's conversation
-            { sender: 'me', text: 'Hey Bob, how\'s it going?', timestamp: '11:00 AM' },
-            { sender: 'them', text: 'Pretty good, thanks!', timestamp: '11:02 AM' },
-            { sender: 'them', text: 'How are you?', timestamp: '11:03 AM' },
-            { sender: 'me', text: 'Doing well too.', timestamp: '11:04 AM' }
-        ],
-        3: [], // User ID 3's conversation (empty)
-        4: []  // User ID 4's conversation (empty)
-    };
-
     let selectedUserId = null;
+    let currentUsers = [];
+
+    // Function to load users and their conversations
+    async function loadUsers() {
+        try {
+            const response = await fetch('load_chat.php');
+            const data = await response.json();
+            
+            if (data.error) {
+                console.error('Error:', data.error);
+                return;
+            }
+
+            currentUsers = data.users;
+            displayUsers();
+        } catch (error) {
+            console.error('Failed to load users:', error);
+        }
+    }
 
     // Function to display users in the user list
     function displayUsers() {
         userListUl.innerHTML = ''; // Clear existing list
-        users.forEach(user => {
+        currentUsers.forEach(user => {
             const userLi = document.createElement('li');
-            userLi.textContent = user.name;
+            userLi.textContent = `${user.name} (${user.role})`;
             userLi.addEventListener('click', () => {
                 selectUser(user.id, user.name);
             });
@@ -48,31 +43,86 @@ document.addEventListener('DOMContentLoaded', () => {
     function selectUser(userId, userName) {
         selectedUserId = userId;
         conversationHeader.textContent = userName;
-        displayMessages(userId);
+        loadMessages(userId);
 
         // Highlight selected user in the list
         document.querySelectorAll('#user-list li').forEach(li => li.classList.remove('active'));
-        const selectedUserLi = Array.from(userListUl.children).find(li => li.textContent === userName);
+        const selectedUserLi = Array.from(userListUl.children).find(li => li.textContent.includes(userName));
         if (selectedUserLi) {
             selectedUserLi.classList.add('active');
         }
     }
 
-    // Function to display messages for a selected user
-    function displayMessages(userId) {
+    // Function to load messages for a selected user
+    async function loadMessages(userId) {
+        try {
+            const response = await fetch(`load_chat.php?user_id=${userId}`);
+            const data = await response.json();
+            
+            if (data.error) {
+                console.error('Error:', data.error);
+                return;
+            }
+
+            displayMessages(data.messages || []);
+        } catch (error) {
+            console.error('Failed to load messages:', error);
+        }
+    }
+
+    // Function to display messages
+    function displayMessages(messages) {
         messageDisplay.innerHTML = ''; // Clear existing messages
-        if (conversations[userId]) {
-            conversations[userId].forEach(message => {
+        if (messages.length > 0) {
+            messages.forEach(message => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message');
                 messageDiv.classList.add(message.sender === 'me' ? 'sent' : 'received');
-                messageDiv.textContent = message.text;
+                
+                const timeSpan = document.createElement('span');
+                timeSpan.classList.add('timestamp');
+                timeSpan.textContent = message.timestamp;
+                
+                const textDiv = document.createElement('div');
+                textDiv.textContent = message.text;
+                
+                messageDiv.appendChild(textDiv);
+                messageDiv.appendChild(timeSpan);
                 messageDisplay.appendChild(messageDiv);
             });
-            // Scroll to the bottom to show latest messages
-            messageDisplay.scrollTop = messageDisplay.scrollHeight;
         } else {
             messageDisplay.innerHTML = '<p>No messages yet.</p>';
+        }
+        // Scroll to the bottom to show latest messages
+        messageDisplay.scrollTop = messageDisplay.scrollHeight;
+    }
+
+    // Function to send a message
+    async function sendMessage(text) {
+        if (!selectedUserId || !text.trim()) return;
+
+        try {
+            const response = await fetch('send_message.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    receiver_id: selectedUserId,
+                    message: text.trim()
+                })
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                messageInput.value = ''; // Clear input field
+                loadMessages(selectedUserId); // Reload messages to show the new one
+            } else {
+                console.error('Failed to send message:', data.error);
+            }
+        } catch (error) {
+            console.error('Error sending message:', error);
         }
     }
 
@@ -80,17 +130,28 @@ document.addEventListener('DOMContentLoaded', () => {
     sendButton.addEventListener('click', () => {
         const messageText = messageInput.value.trim();
         if (messageText && selectedUserId) {
-            const newMessage = { sender: 'me', text: messageText, timestamp: new Date().toLocaleTimeString() };
-            if (!conversations[selectedUserId]) {
-                conversations[selectedUserId] = []; // Initialize conversation if it doesn't exist
-            }
-            conversations[selectedUserId].push(newMessage);
-            displayMessages(selectedUserId);
-            messageInput.value = ''; // Clear input field
-            // In a real app, you would send the message to the backend here
+            sendMessage(messageText);
         }
     });
 
-    // Initial display of users
-    displayUsers();
+    // Event listener for pressing Enter to send message
+    messageInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            const messageText = messageInput.value.trim();
+            if (messageText && selectedUserId) {
+                sendMessage(messageText);
+            }
+        }
+    });
+
+    // Auto-refresh messages every 5 seconds when a conversation is selected
+    setInterval(() => {
+        if (selectedUserId) {
+            loadMessages(selectedUserId);
+        }
+    }, 5000);
+
+    // Initial load of users
+    loadUsers();
 });
