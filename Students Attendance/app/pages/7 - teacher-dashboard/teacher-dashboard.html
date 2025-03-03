@@ -8,133 +8,218 @@
     <link rel="stylesheet" href="teacher-dashboard.css">
 </head>
 
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">Attendance</div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#">Statistics</a></li>
+                    <li><a href="#">Teacher</a></li>
+                    <li><a href="#">Marks</a></li>
+                    <li><a href="#">Messages <span class="badge">14</span></a></li>
+                    <li><a href="#">Students</a></li>
+                    <li><a href="../10 - Qr Genration/qr.html">QR Code</a></li>
+                    <li><a href="#">Reports</a></li>
+                    <li><a href="#">Settings</a></li>
+                    <li><a href="#">Add Student</a></li>
+                    <li><a href="#">Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Statistics</h1>
+                <div class="user-info">
+                    <span class="username">A.Teacher</span> <span class="role">Teacher</span>
+                    <div class="profile-icon">A</div>
+                </div>
+            </header>
 
-<div class="dashboard-container">
-    <aside class="sidebar">
-        <div class="sidebar-header">Attendance</div>
-        <nav class="sidebar-nav">
-            <ul>
-                <li><a href="#">Statistics</a></li>
-                <li><a href="#">Teacher</a></li>
-                <li><a href="#">Marks</a></li>
-                <li><a href="#">Messages <span class="badge">14</span></a></li>
-                <li><a href="#">Students</a></li>
-                <li><a href="#">Reports</a></li>
-                <li><a href="#">Settings</a></li>
-                <li><a href="#">Add Student</a></li>
-                <li><a href="#">Logout</a></li>
-            </ul>
-        </nav>
-    </aside>
-    <main class="main-content">
-        <header class="main-header">
-            <h1>Statistics</h1>
-            <div class="user-info">
-                <span class="username">A.Teacher</span> <span class="role">Teacher</span>
-                <div class="profile-icon">A</div>
-            </div>
-        </header>
+            <section class="statistics-section">
+                <div class="stats-card week-stats">
+                    <h3>Attendance per week</h3>
+                    <div class="progress-circle">80%</div>
+                    <p>Last 7 Days</p>
+                </div>
+                <div class="stats-card month-stats">
+                    <h3>Attendance per month</h3>
+                    <div class="progress-circle">80%</div>
+                    <p>Last 30 Days</p>
+                </div>
+                <div class="stats-card semester-stats">
+                    <h3>Attendance per semester</h3>
+                    <div class="progress-circle">100%</div>
+                    <p>Last 6 Month</p>
+                </div>
+            </section>
+            <section class="open-attendance-section">
+                <h2>Open Attendance</h2>
+                <form id="attendance-form">
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="start-time">Start Time:</label>
+                        <input type="time" id="start-time" name="start_time" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end-time">End Time:</label>
+                        <input type="time" id="end-time" name="end_time" required>
+                    </div>
+                    <button type="submit" class="open-attendance-button">Open Attendance</button>
+                </form>
+                <div id="session-status"></div>
+            </section>
+            <section class="students-section">
+                <h2>Students</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Status (Today)</th>
+                            <th>Total Present</th>
+                            <th>Total Absent</th>
+                            <th>Final Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>hibo zineb</td>
+                            <td>Absent</td>
+                            <td>4</td>
+                            <td>2</td>
+                            <td>19</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>KECHKAR ZINEB</td>
+                            <td>Absent</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>BOULFRAD HALA</td>
+                            <td>Absent</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>okoko</td>
+                            <td>Absent</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"><a href="#">Show All</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
 
-
-
-        <section class="statistics-section">
-            <div class="stats-card week-stats">
-                <h3>Attendance per week</h3>
-                <div class="progress-circle">80%</div>
-                <p>Last 7 Days</p>
-            </div>
-            <div class="stats-card month-stats">
-                <h3>Attendance per month</h3>
-                <div class="progress-circle">80%</div>
-                <p>Last 30 Days</p>
-            </div>
-            <div class="stats-card semester-stats">
-                <h3>Attendance per semester</h3>
-                <div class="progress-circle">100%</div>
-                <p>Last 6 Month</p>
-            </div>
-        </section>
-        <section class="open-attendance-section">
-            <h2>Open Attendance</h2>
-            <div class="form-group">
-                <label for="date">Date:</label>
-                <input type="date" id="date">
-            </div>
-            <div class="form-group">
-                <label for="start-time">Start Time:</label>
-                <input type="time" id="start-time">
-            </div>
-            <div class="form-group">
-                <label for="end-time">End Time:</label>
-                <input type="time" id="end-time">
-            </div>
-            <button class="open-attendance-button">Open Attendance</button>
-        </section>
-        <section class="students-section">
-            <h2>Students</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Status (Today)</th>
-                        <th>Total Present</th>
-                        <th>Total Absent</th>
-                        <th>Final Score</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>hibo zineb</td>
-                        <td>Absent</td>
-                        <td>4</td>
-                        <td>2</td>
-                        <td>19</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>KECHKAR ZINEB</td>
-                        <td>Absent</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>20</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>BOULFRAD HALA</td>
-                        <td>Absent</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>20</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>okoko</td>
-                        <td>Absent</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>20</td>
-                    </tr>
-                    <tr>
-                        <td colspan="6"><a href="#">Show All</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-
-
-
-
-        <iframe class="chat-section" src="../9 - chat-panel/chat-panel.html" frameborder="0">
-
-
-        </iframe>
-
-
-    </main>
-</div>
+            <iframe class="chat-section" src="../9 - chat-panel/chat-panel.html" frameborder="0"></iframe>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const attendanceForm = document.getElementById('attendance-form');
+            const sessionStatus = document.getElementById('session-status');
+            
+            // Set default date to today
+            document.getElementById('date').valueAsDate = new Date();
+            
+            // Check for active session on load
+            checkActiveSession();
+            
+            attendanceForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData(attendanceForm);
+                formData.append('action', 'create');
+                
+                try {
+                    const response = await fetch('attendance_management.php', {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'include' // Add this to ensure cookies/session are sent
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        sessionStatus.innerHTML = `<div style="color: green;">${data.message}</div>`;
+                        // After successful session creation, redirect to QR page
+                        window.location.href = '../10 - Qr Genration/qr.html';
+                    } else {
+                        sessionStatus.innerHTML = `<div style="color: red;">${data.error}</div>`;
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    sessionStatus.innerHTML = '<div style="color: red;">Failed to create session</div>';
+                }
+            });
+            
+            async function checkActiveSession() {
+                try {
+                    const formData = new FormData();
+                    formData.append('action', 'get_active');
+                    
+                    const response = await fetch('attendance_management.php', {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'include' // Add this to ensure cookies/session are sent
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        sessionStatus.innerHTML = `
+                            <div style="color: green; margin-top: 1rem;">
+                                Active session: ${data.session.date} ${data.session.start_time} - ${data.session.end_time}
+                                <button onclick="closeSession(${data.session.session_id})">Close Session</button>
+                                <a href="../10 - Qr Genration/qr.html" class="btn">Generate QR Code</a>
+                            </div>`;
+                        attendanceForm.style.display = 'none';
+                    } else {
+                        attendanceForm.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+            
+            window.closeSession = async (sessionId) => {
+                try {
+                    const formData = new FormData();
+                    formData.append('action', 'close');
+                    formData.append('session_id', sessionId);
+                    
+                    const response = await fetch('attendance_management.php', {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'include' // Add this to ensure cookies/session are sent
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        sessionStatus.innerHTML = `<div style="color: green;">${data.message}</div>`;
+                        attendanceForm.style.display = 'block';
+                    } else {
+                        sessionStatus.innerHTML = `<div style="color: red;">${data.error}</div>`;
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    sessionStatus.innerHTML = '<div style="color: red;">Failed to close session</div>';
+                }
+            };
+        });
+    </script>
 </body>
 
 </html>

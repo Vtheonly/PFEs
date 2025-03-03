@@ -37,7 +37,8 @@
     <div class="login-container">
         <div class="login-box">
             <h2>Student Login</h2>
-            <form method="post">
+            <form action="login_main.php" method="post">
+                <input type="hidden" name="role" value="student">
                 <div class="input-group">
                     <input type="email" name="email" placeholder="Email" required>
                 </div>

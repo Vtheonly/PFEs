@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generation</title>
+    <link rel="stylesheet" href="qr.css">
+</head>
+<body>
+    <div class="container">
+        <div id="qr-container">
+            <div id="qr-code"></div>
+            <button id="generate-btn">Generate New QR Code</button>
+            <a href="../7 - teacher-dashboard/" class="back-btn">Back to Dashboard</a>
+        </div>
+    </div>
+    <script src="qr.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const generateBtn = document.getElementById('generate-btn');
+            const qrContainer = document.getElementById('qr-code');
+
+            async function generateQRCode() {
+                try {
+                    const formData = new FormData();
+                    formData.append('action', 'generate');
+
+                    const response = await fetch('qr.php', {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'include' // Add this to ensure cookies/session are sent
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        // Display the QR code
+                        qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data.code}" alt="QR Code">`;
+                    } else {
+                        qrContainer.innerHTML = `<div class="error">${data.error}</div>`;
+                        if (data.error.includes("No active session")) {
+                            // Redirect back to dashboard if there's no active session
+                            setTimeout(() => {
+                                window.location.href = '../7 - teacher-dashboard/';
+                            }, 2000);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    qrContainer.innerHTML = '<div class="error">Failed to generate QR code</div>';
+                }
+            }
+
+            generateBtn.addEventListener('click', generateQRCode);
+            // Generate QR code on page load
+            generateQRCode();
+        });
+    </script>
+</body>
+</html>

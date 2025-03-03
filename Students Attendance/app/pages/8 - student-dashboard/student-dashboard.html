@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard - Attendance</title>
     <link rel="stylesheet" href="student-dashboard.css">
+    <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
     <div class="dashboard-container">
@@ -33,14 +34,11 @@
             <section class="attendance-status-section">
                 <h2>Attendance Status</h2>
                 <div class="status-box">
-                    <p>Attendance is open!</p>
-                    <div class="mark-attendance-form">
-                        <label for="attendance-status">Mark Attendance:</label>
-                        <select id="attendance-status">
-                            <option value="present">Present</option>
-                            <option value="absent">Absent</option>
-                        </select>
-                        <button class="submit-attendance-button">Submit</button>
+                    <div id="qr-reader" style="width: 300px"></div>
+                    <div id="qr-reader-results"></div>
+                    <div class="manual-entry">
+                        <input type="text" id="manual-code" placeholder="Enter code manually">
+                        <button onclick="submitCode(document.getElementById('manual-code').value)">Submit</button>
                     </div>
                 </div>
             </section>
@@ -105,5 +103,69 @@
 
         </main>
     </div>
+    <script>
+        function onScanSuccess(decodedText, decodedResult) {
+            console.log("Scanned QR code: ", decodedText);
+            submitCode(decodedText);
+        }
+
+        function onScanFailure(error) {
+            console.warn(`QR scan failed: ${error}`);
+            // Only show error if it's a persistent issue
+            if (error && error.message && error.message.includes("No QR code found")) {
+                return; // Don't show this common error
+            }
+            document.getElementById('qr-reader-results').innerHTML = 
+                `<div style="color: orange">Scanner error: ${error}</div>`;
+        }
+
+        async function submitCode(code) {
+            const resultsDiv = document.getElementById('qr-reader-results');
+            resultsDiv.innerHTML = '<div>Processing code...</div>';
+            
+            try {
+                console.log("Submitting code:", code);
+                const formData = new FormData();
+                formData.append('action', 'validate');
+                formData.append('code', code);
+
+                const response = await fetch('../10 - Qr Genration/qr.php', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+
+                console.log("Server response status:", response.status);
+                const data = await response.json();
+                console.log("Server response:", data);
+                
+                if (data.success) {
+                    resultsDiv.innerHTML = `<div style="color: green">${data.message}</div>`;
+                    // Refresh attendance details after successful submission
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    resultsDiv.innerHTML = `<div style="color: red">${data.error || 'Unknown error occurred'}</div>`;
+                }
+            } catch (error) {
+                console.error('Error submitting code:', error);
+                resultsDiv.innerHTML = 
+                    `<div style="color: red">Failed to submit code: ${error.message}</div>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Initializing QR scanner...");
+            const html5QrcodeScanner = new Html5QrcodeScanner(
+                "qr-reader", { 
+                    fps: 10, 
+                    qrbox: 250,
+                    rememberLastUsedCamera: true
+                }
+            );
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        });
+    </script>
 </body>
 </html>

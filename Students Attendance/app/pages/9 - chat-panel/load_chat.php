@@ -12,17 +12,31 @@ if (!isset($_SESSION['user_id'])) {
 
 $current_user_id = $_SESSION['user_id'];
 
-// Get list of users who have conversations with current user
-$users_query = "SELECT DISTINCT u.user_id, u.name, u.role 
-                FROM Users u 
-                WHERE u.user_id IN (
-                    SELECT sender_id FROM Messages WHERE receiver_id = ?
-                    UNION
-                    SELECT receiver_id FROM Messages WHERE sender_id = ?
-                )";
+// First, get the current user's role
+$role_query = "SELECT role FROM Users WHERE user_id = ?";
+$stmt = $conn->prepare($role_query);
+$stmt->bind_param("i", $current_user_id);
+$stmt->execute();
+$role_result = $stmt->get_result();
+$user_role = $role_result->fetch_assoc()['role'];
+
+// Modify query based on user role
+if ($user_role === 'teacher') {
+    // Teachers can see all users
+    $users_query = "SELECT DISTINCT u.user_id, u.name, u.role 
+                    FROM Users u 
+                    WHERE u.user_id != ?";
+} else {
+    // Students can only see teachers
+    $users_query = "SELECT DISTINCT u.user_id, u.name, u.role 
+                    FROM Users u 
+                    WHERE u.role = 'teacher'";
+}
 
 $stmt = $conn->prepare($users_query);
-$stmt->bind_param("ii", $current_user_id, $current_user_id);
+if ($user_role === 'teacher') {
+    $stmt->bind_param("i", $current_user_id);
+} 
 $stmt->execute();
 $users_result = $stmt->get_result();
 

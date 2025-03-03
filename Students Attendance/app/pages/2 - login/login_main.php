@@ -53,11 +53,11 @@ function validateStudentLogin($email, $password) {
 
 function validateTeacherLogin($email, $password) {
     global $conn;
-    error_log("Validating teacher login for email: " . $email);
+    error_log("Teacher login attempt - Email: " . $email);
+    error_log("Submitted password length: " . strlen($password));
     
     try {
-        // Verify teacher-specific conditions
-        $stmt = $conn->prepare("SELECT user_id, name, password FROM Users WHERE email = ? AND role = 'teacher'");
+        $stmt = $conn->prepare("SELECT user_id, name, password, role FROM Users WHERE email = ?");
         if (!$stmt) {
             error_log("Prepare failed: " . $conn->error);
             return ["success" => false, "message" => "Database error"];
@@ -70,17 +70,31 @@ function validateTeacherLogin($email, $password) {
         }
         
         $result = $stmt->get_result();
+        error_log("Query result rows: " . $result->num_rows);
         
         if ($result->num_rows === 1) {
             $teacher = $result->fetch_assoc();
+            error_log("User found - Role: " . $teacher['role']);
+            error_log("Stored password length: " . strlen($teacher['password']));
+            error_log("Password comparison: " . var_export($password === $teacher['password'], true));
+            error_log("Raw password check - Stored: '" . $teacher['password'] . "', Submitted: '" . $password . "'");
             
+            // Check role first
+            if ($teacher['role'] !== 'teacher') {
+                error_log("User found but not a teacher");
+                return ["success" => false, "message" => "Invalid email or password"];
+            }
+            
+            // Then check password
             if ($password === $teacher['password']) {
                 $_SESSION['user_id'] = $teacher['user_id'];
                 $_SESSION['name'] = $teacher['name'];
                 $_SESSION['role'] = 'teacher';
+                error_log("Teacher login successful - User ID: " . $teacher['user_id']);
                 return ["success" => true, "message" => "Login successful"];
             }
         }
+        error_log("Invalid login attempt");
         return ["success" => false, "message" => "Invalid email or password"];
     } catch (Exception $e) {
         error_log("Teacher login error: " . $e->getMessage());
@@ -94,18 +108,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
+    $role = $_POST['role'] ?? '';
     
-    if (empty($email) || empty($password)) {
-        error_log("Email or password is empty");
-        echo json_encode(["success" => false, "message" => "Email and password are required"]);
+    if (empty($email) || empty($password) || empty($role)) {
+        error_log("Email, password, or role is empty");
+        echo json_encode(["success" => false, "message" => "Email, password, and role are required"]);
         exit();
     }
     
-    // Determine if it's a teacher or student login based on the form's origin
-    $role = strpos($_SERVER['HTTP_REFERER'] ?? '', 'teacher-login.html') !== false ? 'teacher' : 'student';
-    error_log("Determined role: " . $role);
-    
-    // Use the appropriate validation function based on role
+    // Use the appropriate validation function based on submitted role
     $result = ($role === 'teacher') ? 
         validateTeacherLogin($email, $password) : 
         validateStudentLogin($email, $password);
