@@ -46,25 +46,69 @@ function createAttendanceSession($teacher_id, $date, $start_time, $end_time) {
     }
 }
 
+
 function closeAttendanceSession($session_id, $teacher_id) {
     global $conn;
     
     try {
+        // Start a transaction to ensure all operations succeed or fail together
+        $conn->begin_transaction();
+        
+        // First, update the session status to closed
         $sql = "UPDATE AttendanceSessions 
                 SET status = 'closed' 
                 WHERE session_id = ? AND teacher_id = ? AND status = 'open'";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ii", $session_id, $teacher_id);
+        $stmt->execute();
         
-        if ($stmt->execute() && $stmt->affected_rows > 0) {
-            return ["success" => true, "message" => "Session closed successfully"];
-        } else {
+        // Check if the session was found and updated
+        if ($stmt->affected_rows <= 0) {
+            $conn->rollback();
             return ["success" => false, "error" => "No open session found or unauthorized"];
         }
+        
+        // Now mark all students who haven't marked attendance as absent
+        $sql = "INSERT INTO StudentAttendanceRecords (session_id, student_id, attendance_status)
+                SELECT 
+                    ?, 
+                    u.user_id, 
+                    'absent'
+                FROM 
+                    Users u
+                WHERE 
+                    u.role = 'student'
+                    AND NOT EXISTS (
+                        SELECT 1
+                        FROM StudentAttendanceRecords sar
+                        WHERE sar.session_id = ?
+                        AND sar.student_id = u.user_id
+                    )";
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ii", $session_id, $session_id);
+        $stmt->execute();
+        
+        // Get the number of students marked as absent
+        $absent_count = $stmt->affected_rows;
+        
+        // Commit the transaction
+        $conn->commit();
+        
+        return [
+            "success" => true, 
+            "message" => "Session closed successfully. $absent_count students marked as absent."
+        ];
+        
     } catch (Exception $e) {
+        // Roll back the transaction in case of an error
+        $conn->rollback();
         return ["success" => false, "error" => $e->getMessage()];
     }
 }
+
+
+
 
 function getActiveSession($teacher_id) {
     global $conn;
