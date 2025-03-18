@@ -315,53 +315,6 @@ body {
 
 
 .chat-section{
-
-    margin-top: 5vh;
     width: 80vw;
     height: 80vh;
-}
-
-
-
-
-/* Statistics Section */
-.statistics-section {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.statistics-section h2 {
-    margin-top: 0;
-    margin-bottom: 20px;
-}
-
-/* Reusing table styles from other dashboard CSS files */
-.statistics-section table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.statistics-section th, .statistics-section td {
-    padding: 8px 12px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-}
-
-.statistics-section th {
-    background-color: #f9f9f9;
-    font-weight: bold;
-}
-
-.statistics-section tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.statistics-section tbody tr:last-child td a {
-    display: block;
-    text-align: center;
-    color: #3b82f6;
-    text-decoration: none;
-    padding-top: 10px;
 }
