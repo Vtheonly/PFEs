@@ -1,12 +1,63 @@
-*{
-    padding: 0;
-    margin: 0;
+
+
+body {
+    font-family: 'Roboto', sans-serif; /* Modern, readable font - Google Font */
+    background: linear-gradient(135deg, #e0f7fa, #b2ebf2); /* Soft gradient background */
+    color: #333; /* Dark grey text for readability */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px; /* Add some padding around content on smaller screens */
 }
 
-body{
-    background-color: aqua;
+.landing-container {
+    background-color: white; /* White container for content */
+    padding: 60px; /* Increased padding for a more spacious feel */
+    border-radius: 12px; /* More rounded corners for a softer look */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Deeper, softer shadow for depth */
+    text-align: center; /* Center text within the container */
+    max-width: 800px; /* Limit container width for readability on larger screens */
+    width: 100%; /* Make container responsive */
 }
 
-h1{
-    color: white;
+h1 {
+    font-size: 2.5em; /* Larger, more prominent heading */
+    color: #00bcd4; /*  Teal/Cyan Heading Color - Accent color */
+    margin-bottom: 30px; /* Increased margin below heading */
+    font-weight: 700; /* Bold font weight for heading */
+    letter-spacing: -1px; /* Slightly reduce letter spacing for a tighter look */
 }
+
+.login-links {
+    margin-top: 20px; /* Space above the login links */
+}
+
+.login-links p {
+    margin-bottom: 15px; /* Space between login link paragraphs */
+}
+
+a {
+    display: inline-block; /* Changed to inline-block to control width better with padding */
+        padding: 14px 30px; /* Increased padding for larger buttons */
+        width: 15em;
+    background-color: #00bcd4; /* Teal/Cyan Button Background - Primary color */
+    color: white; /* White text on buttons */
+    text-decoration: none; /* Remove underlines */
+    border-radius: 8px; /* Rounded button corners */
+    font-size: 1.1em; /* Slightly larger font size for buttons */
+    font-weight: 500; /* Medium font weight for buttons */
+    transition: all 0.3s ease; /* Smooth hover transition */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for buttons */
+    margin: auto;
+    transform: translateY(0px);
+    text-align: center;
+}
+
+a:hover {
+    background-color: #00acc1; /* Slightly darker teal on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Slightly increased shadow on hover */
+    transform: translateY(-8px); /* Subtle lift effect on hover */
+}
+

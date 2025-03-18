@@ -7,7 +7,7 @@
 body {
     font-family: sans-serif;
     margin: 0;
-    background-color: #f0f2f5; /* Light grey background */
+    background-color: #f0f2f5; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,6 +23,7 @@ body {
     height: 100vh; /* Adjust as needed */
     overflow: hidden; /* To prevent content from overflowing rounded corners */
     font-family: Arial, sans-serif;
+    border: solid 2px rgba(0, 0, 0, 0.301);
 }
 
 /* Users List (Sidebar) */

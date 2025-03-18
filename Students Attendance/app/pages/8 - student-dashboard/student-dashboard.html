@@ -1,171 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Student Dashboard - Attendance</title>
-    <link rel="stylesheet" href="student-dashboard.css">
+    <link rel="stylesheet" href="student-dashboard.css" />
     <script src="https://unpkg.com/html5-qrcode"></script>
-</head>
-<body>
+  </head>
+
+  <body>
     <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">Student</div>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#">Attendance</a></li>
-                    <li><a href="#">Statistics</a></li>
-                    <li><a href="#">Marks</a></li>
-                    <li><a href="#">Messages <span class="badge">3</span></a></li>
-                    <li><a href="#">Profile</a></li>
-                    <li><a href="#">Logout</a></li>
-                </ul>
-            </nav>
-        </aside>
-        <main class="main-content">
-            <header class="main-header">
-                <h1>Welcome, AMA</h1>
-                <div class="user-info">
-                    <div class="day-night-toggle">☀️</div>
-                    <span class="username">HI, AMA</span>
-                    <div class="profile-icon">A</div>
-                </div>
-            </header>
-            <section class="attendance-status-section">
-                <h2>Attendance Status</h2>
-                <div class="status-box">
-                    <div id="qr-reader" style="width: 300px"></div>
-                    <div id="qr-reader-results"></div>
-                    <div class="manual-entry">
-                        <input type="text" id="manual-code" placeholder="Enter code manually">
-                        <button onclick="submitCode(document.getElementById('manual-code').value)">Submit</button>
-                    </div>
-                </div>
-            </section>
-            <section class="attendance-summary-section">
-                <div class="summary-card week-attendance">
-                    <h3>Attendance This Week</h3>
-                    <div class="progress-circle">85%</div>
-                    <p>Updated Today</p>
-                </div>
-                <div class="summary-card month-attendance">
-                    <h3>Attendance This Month</h3>
-                    <div class="progress-circle">90%</div>
-                    <p>Updated Yesterday</p>
-                </div>
-                <div class="summary-card overall-attendance">
-                    <h3>Overall Attendance</h3>
-                    <div class="progress-circle">92%</div>
-                    <p>Last Semester</p>
-                </div>
-            </section>
-            <section class="attendance-details-section">
-                <h2>Attendance Details</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Jan 10 2025 09:00:00 GMT+0000 (West Africa Standard Time)</td>
-                            <td>Present</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><a href="#">View Full History</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
+      <aside class="sidebar">
+        <div class="sidebar-header">Student Dashboard</div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>Theme : Light</li>
+            <li><a href="../0 - landing/index.html">Logout</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <main class="main-content">
+        <header class="main-header">
+          <h1>Welcome, AMA</h1>
+          <div class="user-info">
+            <div class="day-night-toggle">☀️</div>
+            <span class="username">HI, AMA</span>
+            <div class="profile-icon">A</div>
+          </div>
+        </header>
+        <section class="attendance-status-section">
+          <h2>Attendance Status</h2>
+          <div class="status-box">
+            <div id="qr-reader" style="width: 300px"></div>
+            <div id="qr-reader-results"></div>
+            <div class="manual-entry">
+              <input
+                type="text"
+                id="manual-code"
+                placeholder="Enter code manually"
+              />
+              <button
+                onclick="submitCode(document.getElementById('manual-code').value)"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </section>
+        <section class="attendance-summary-section">
+          <div class="summary-card week-attendance">
+            <h3>Attendance This Week</h3>
+            <div class="progress-circle">85%</div>
+            <p>Updated Today</p>
+          </div>
+          <div class="summary-card month-attendance">
+            <h3>Attendance This Month</h3>
+            <div class="progress-circle">90%</div>
+            <p>Updated Yesterday</p>
+          </div>
+          <div class="summary-card overall-attendance">
+            <h3>Overall Attendance</h3>
+            <div class="progress-circle">92%</div>
+            <p>Last Semester</p>
+          </div>
+        </section>
+        <section class="attendance-details-section">
+          <h2>Attendance Details</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Jan 10 2025 09:00:00 GMT+0000 (West Africa Standard Time)
+                </td>
+                <td>Present</td>
+              </tr>
+              <tr>
+                <td colspan="2"><a href="#">View Full History</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
 
+        <section class="statistics-section">
+          <h2>Statistics</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Present</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>Absent</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td colspan="2"><a href="#">Show All</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
 
-<!--             
-            <section class="messages-section">
-                <h2>Messages</h2>
-                <div class="message-item">
-                    <div class="message-icon">M</div>
-                    <div class="message-content">
-                        <p><strong>Message from Teacher</strong></p>
-                        <p>10:00 AM</p>
-                    </div>
-                </div>
-            </section> -->
-
-
-
-            <iframe class="chat-section" src="../9 - chat-panel/chat-panel.html" frameborder="0">
-
-
-
-            </iframe>
-
-        </main>
+        <iframe
+          class="chat-section"
+          src="../9 - chat-panel/chat-panel.html"
+          frameborder="0"
+        >
+        </iframe>
+      </main>
     </div>
     <script>
-        function onScanSuccess(decodedText, decodedResult) {
-            console.log("Scanned QR code: ", decodedText);
-            submitCode(decodedText);
+      function onScanSuccess(decodedText, decodedResult) {
+        console.log("Scanned QR code: ", decodedText);
+        submitCode(decodedText);
+      }
+
+      function onScanFailure(error) {
+        console.warn(`QR scan failed: ${error}`);
+        // Only show error if it's a persistent issue
+        if (
+          error &&
+          error.message &&
+          error.message.includes("No QR code found")
+        ) {
+          return; // Don't show this common error
         }
+        document.getElementById(
+          "qr-reader-results"
+        ).innerHTML = `<div style="color: orange">Scanner error: ${error}</div>`;
+      }
 
-        function onScanFailure(error) {
-            console.warn(`QR scan failed: ${error}`);
-            // Only show error if it's a persistent issue
-            if (error && error.message && error.message.includes("No QR code found")) {
-                return; // Don't show this common error
-            }
-            document.getElementById('qr-reader-results').innerHTML = 
-                `<div style="color: orange">Scanner error: ${error}</div>`;
+      async function submitCode(code) {
+        const resultsDiv = document.getElementById("qr-reader-results");
+        resultsDiv.innerHTML = "<div>Processing code...</div>";
+
+        try {
+          console.log("Submitting code:", code);
+          const formData = new FormData();
+          formData.append("action", "validate");
+          formData.append("code", code);
+
+          const response = await fetch("../10 - Qr Genration/qr.php", {
+            method: "POST",
+            body: formData,
+            credentials: "include",
+          });
+
+          console.log("Server response status:", response.status);
+          const data = await response.json();
+          console.log("Server response:", data);
+
+          if (data.success) {
+            resultsDiv.innerHTML = `<div style="color: green">${data.message}</div>`;
+            // Refresh attendance details after successful submission
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          } else {
+            resultsDiv.innerHTML = `<div style="color: red">${
+              data.error || "Unknown error occurred"
+            }</div>`;
+          }
+        } catch (error) {
+          console.error("Error submitting code:", error);
+          resultsDiv.innerHTML = `<div style="color: red">Failed to submit code: ${error.message}</div>`;
         }
+      }
 
-        async function submitCode(code) {
-            const resultsDiv = document.getElementById('qr-reader-results');
-            resultsDiv.innerHTML = '<div>Processing code...</div>';
-            
-            try {
-                console.log("Submitting code:", code);
-                const formData = new FormData();
-                formData.append('action', 'validate');
-                formData.append('code', code);
-
-                const response = await fetch('../10 - Qr Genration/qr.php', {
-                    method: 'POST',
-                    body: formData,
-                    credentials: 'include'
-                });
-
-                console.log("Server response status:", response.status);
-                const data = await response.json();
-                console.log("Server response:", data);
-                
-                if (data.success) {
-                    resultsDiv.innerHTML = `<div style="color: green">${data.message}</div>`;
-                    // Refresh attendance details after successful submission
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2000);
-                } else {
-                    resultsDiv.innerHTML = `<div style="color: red">${data.error || 'Unknown error occurred'}</div>`;
-                }
-            } catch (error) {
-                console.error('Error submitting code:', error);
-                resultsDiv.innerHTML = 
-                    `<div style="color: red">Failed to submit code: ${error.message}</div>`;
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("Initializing QR scanner...");
-            const html5QrcodeScanner = new Html5QrcodeScanner(
-                "qr-reader", { 
-                    fps: 10, 
-                    qrbox: 250,
-                    rememberLastUsedCamera: true
-                }
-            );
-            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("Initializing QR scanner...");
+        const html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", {
+          fps: 10,
+          qrbox: 250,
+          rememberLastUsedCamera: true,
         });
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+      });
     </script>
-</body>
+  </body>
 </html>
