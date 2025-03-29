@@ -36,17 +36,17 @@
                     <section class="statistics-section sec1">
                         <div class="stats-card week-stats">
                             <h3>Attendance per week</h3>
-                            <div class="progress-circle">80%</div>
+                            <div class="progress-circle" id="week-progress">0%</div>
                             <p>Last 7 Days</p>
                         </div>
                         <div class="stats-card month-stats">
                             <h3>Attendance per month</h3>
-                            <div class="progress-circle">80%</div>
+                            <div class="progress-circle" id="month-progress">0%</div>
                             <p>Last 30 Days</p>
                         </div>
                         <div class="stats-card semester-stats">
                             <h3>Attendance per semester</h3>
-                            <div class="progress-circle">100%</div>
+                            <div class="progress-circle" id="semester-progress">0%</div>
                             <p>Last 6 Month</p>
                         </div>
                     </section>
@@ -268,6 +268,30 @@
                         statusDiv.innerHTML = '<div style="color: red;">Failed to post announcement</div>';
                     }
                 });
+
+                // Add this function to load statistics
+                async function loadStatistics() {
+                    try {
+                        const response = await fetch('statistic.php');
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            document.getElementById('week-progress').textContent = data.stats.week + '%';
+                            document.getElementById('month-progress').textContent = data.stats.month + '%';
+                            document.getElementById('semester-progress').textContent = data.stats.semester + '%';
+                        } else {
+                            console.error('Failed to load statistics:', data.error);
+                        }
+                    } catch (error) {
+                        console.error('Error loading statistics:', error);
+                    }
+                }
+
+                // Load statistics when page loads
+                loadStatistics();
+
+                // Reload statistics every 5 minutes
+                setInterval(loadStatistics, 300000);
             });
         </script>
     </body>

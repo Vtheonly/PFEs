@@ -1,26 +1,27 @@
 class QRCodeManager {
     constructor() {
-        this.qrcode = null;
-        this.regenerateBtn = document.getElementById('regenerate-btn');
+        this.lastCode = null;
         this.sessionInterval = null;
-        this.initializeQRCode();
+        this.regenerateBtn = document.getElementById('regenerate-btn');
+        this.qrCodeDiv = document.getElementById('qr-code');
+        this.codeDisplay = document.getElementById('code-display');
+        this.sessionInfo = document.getElementById('session-info');
+        this.errorMessage = document.getElementById('error-message');
+        
         this.setupEventListeners();
+        this.checkAndGenerateCode();
+        this.startPeriodicChecks();
     }
 
-    initializeQRCode() {
-        const qrcodeDiv = document.getElementById('qrcode');
-        qrcodeDiv.innerHTML = '';
-        
-        this.qrcode = new QRCode(qrcodeDiv, {
-            width: 256,
-            height: 256,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
+    setupEventListeners() {
+        this.regenerateBtn.addEventListener('click', () => {
+            this.generateNewCode();
+            // Add button animation
+            this.regenerateBtn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.regenerateBtn.style.transform = '';
+            }, 200);
         });
-        
-        // Check active session before generating code
-        this.checkAndGenerateCode();
     }
 
     async checkActiveSession() {
@@ -33,38 +34,43 @@ class QRCodeManager {
                 body: 'action=get_active'
             });
             
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            
-            const data = await response.json();
-            return data;
+            if (!response.ok) throw new Error('Network response was not ok');
+            return await response.json();
         } catch (error) {
             console.error('Error checking session:', error);
-            this.showError('Failed to check active session status');
+            this.showError('Failed to check session status. Please refresh the page.');
             return { success: false, error: error.message };
         }
     }
 
     async checkAndGenerateCode() {
         const sessionStatus = await this.checkActiveSession();
-        const sessionInfo = document.getElementById('session-info');
         
         if (sessionStatus.success) {
-            sessionInfo.className = 'active';
-            sessionInfo.textContent = `Active Session: ${sessionStatus.session.date} ${sessionStatus.session.start_time} - ${sessionStatus.session.end_time}`;
+            this.sessionInfo.className = 'active';
+            this.sessionInfo.innerHTML = `
+                <strong>Active Session</strong><br>
+                Date: ${sessionStatus.session.date}<br>
+                Time: ${sessionStatus.session.start_time} - ${sessionStatus.session.end_time}
+            `;
             this.regenerateBtn.disabled = false;
             await this.generateNewCode();
         } else {
-            sessionInfo.className = 'inactive';
-            sessionInfo.textContent = 'No active session found. Please start a session from the dashboard.';
+            this.sessionInfo.className = 'inactive';
+            this.sessionInfo.textContent = 'No active session found. Please start a session from the dashboard.';
             this.regenerateBtn.disabled = true;
-            this.qrcode.clear();
-            document.getElementById('code-display').textContent = '';
+            this.clearQRCode();
         }
     }
 
+    clearQRCode() {
+        this.qrCodeDiv.innerHTML = '';
+        this.codeDisplay.textContent = '';
+    }
+
     async generateNewCode() {
+        this.regenerateBtn.disabled = true;
+        
         try {
             const response = await fetch('qr.php', {
                 method: 'POST',
@@ -74,52 +80,103 @@ class QRCodeManager {
                 body: 'action=generate'
             });
             
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            if (!response.ok) throw new Error('Network response was not ok');
             
             const data = await response.json();
             
             if (data.success && data.code) {
-                this.qrcode.clear();
-                this.qrcode.makeCode(data.code);
-                document.getElementById('code-display').textContent = data.code;
+                // Only update if the code is different from the last one
+                if (this.lastCode !== data.code) {
+                    this.lastCode = data.code;
+                    this.showNewCode(data.code);
+                }
                 this.showError(''); // Clear any error messages
             } else {
-                this.showError(data.error || 'Failed to generate code');
-                if (data.error && data.error.includes('No active session')) {
-                    await this.checkAndGenerateCode(); // Recheck session status
-                }
+                throw new Error(data.error || 'Failed to generate code');
             }
         } catch (error) {
             console.error('Error generating QR code:', error);
-            this.showError('Failed to generate QR code. Please check your connection and try again.');
+            this.showError(error.message);
+            if (error.message.includes('No active session')) {
+                await this.checkAndGenerateCode();
+            }
+        } finally {
+            this.regenerateBtn.disabled = false;
         }
+    }
+
+    showNewCode(code) {
+        // Generate QR code
+        const qr = qrcode(0, 'L');
+        qr.addData(code);
+        qr.make();
+        
+        // Add fade-out effect to old content
+        this.qrCodeDiv.style.opacity = '0';
+        this.codeDisplay.style.opacity = '0';
+        
+        setTimeout(() => {
+            // Update content
+            this.qrCodeDiv.innerHTML = qr.createImgTag(8);
+            this.codeDisplay.textContent = code;
+            
+            // Add fade-in effect
+            this.qrCodeDiv.style.opacity = '1';
+            this.codeDisplay.style.opacity = '1';
+        }, 300);
     }
 
     showError(message) {
-        const errorDiv = document.getElementById('error-message');
         if (message) {
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
+            this.errorMessage.textContent = message;
+            this.errorMessage.style.display = 'block';
+            
+            // Auto-hide error after 5 seconds
+            setTimeout(() => {
+                this.errorMessage.style.opacity = '0';
+                setTimeout(() => {
+                    if (this.errorMessage.textContent === message) {
+                        this.errorMessage.style.display = 'none';
+                        this.errorMessage.style.opacity = '1';
+                    }
+                }, 300);
+            }, 5000);
         } else {
-            errorDiv.style.display = 'none';
+            this.errorMessage.style.display = 'none';
         }
     }
 
-    setupEventListeners() {
-        this.regenerateBtn.addEventListener('click', () => {
-            this.generateNewCode();
-        });
-
-        // Start periodic session check
+    startPeriodicChecks() {
+        // Check session status every 30 seconds
         this.sessionInterval = setInterval(() => {
             this.checkAndGenerateCode();
-        }, 5 * 60 * 1000); // Check every 5 minutes
+        }, 30000);
+
+        // Clean up interval when page is closed
+        window.addEventListener('beforeunload', () => {
+            if (this.sessionInterval) {
+                clearInterval(this.sessionInterval);
+            }
+        });
     }
 }
 
 // Initialize when the page loads
 document.addEventListener('DOMContentLoaded', () => {
+    // Add CSS transitions
+    const style = document.createElement('style');
+    style.textContent = `
+        #qr-code, #code-display {
+            transition: opacity 0.3s ease;
+        }
+        #regenerate-btn {
+            transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        #error-message {
+            transition: opacity 0.3s ease;
+        }
+    `;
+    document.head.appendChild(style);
+    
     new QRCodeManager();
 });
