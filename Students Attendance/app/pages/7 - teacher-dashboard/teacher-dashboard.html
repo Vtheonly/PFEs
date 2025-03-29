@@ -71,6 +71,7 @@
                 </section>
                 <section class="students-section">
                     <h2>Students</h2>
+                    <div id="loading-status"></div>
                     <table>
                         <thead>
                             <tr>
@@ -82,41 +83,9 @@
                                 <th>Final Score</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="students-table-body">
                             <tr>
-                                <td>1</td>
-                                <td>hibo zineb</td>
-                                <td>Absent</td>
-                                <td>4</td>
-                                <td>2</td>
-                                <td>19</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>KECHKAR ZINEB</td>
-                                <td>Absent</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>20</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>BOULFRAD HALA</td>
-                                <td>Absent</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>20</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>okoko</td>
-                                <td>Absent</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>20</td>
-                            </tr>
-                            <tr>
-                                <td colspan="6"><a href="#">Show All</a></td>
+                                <td colspan="6">Loading...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -215,6 +184,45 @@
                         sessionStatus.innerHTML = '<div style="color: red;">Failed to close session</div>';
                     }
                 };
+
+                // Add this new function to load students
+                async function loadStudents() {
+                    const loadingStatus = document.getElementById('loading-status');
+                    const tbody = document.getElementById('students-table-body');
+                    
+                    try {
+                        loadingStatus.textContent = 'Loading students...';
+                        const response = await fetch('get_students.php');
+                        const data = await response.json();
+                        
+                        if (data.success && data.data.length > 0) {
+                            tbody.innerHTML = data.data.map(student => `
+                                <tr>
+                                    <td>${student.id}</td>
+                                    <td>${student.name}</td>
+                                    <td>${student.today_status}</td>
+                                    <td>${student.total_present}</td>
+                                    <td>${student.total_absent}</td>
+                                    <td>${student.final_score}</td>
+                                </tr>
+                            `).join('');
+                            loadingStatus.textContent = `Loaded ${data.data.length} students`;
+                        } else {
+                            tbody.innerHTML = '<tr><td colspan="6">No students found</td></tr>';
+                            loadingStatus.textContent = 'No students found';
+                        }
+                    } catch (error) {
+                        console.error('Error loading students:', error);
+                        tbody.innerHTML = '<tr><td colspan="6">Error loading student data</td></tr>';
+                        loadingStatus.textContent = 'Error loading students';
+                    }
+                }
+
+                // Load students when page loads
+                loadStudents();
+
+                // Reload students every minute
+                setInterval(loadStudents, 60000);
             });
         </script>
     </body>
