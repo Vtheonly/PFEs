@@ -335,3 +335,40 @@ body {
     width: 80vw;
     height: 80vh;
 }
+
+.make_announcement {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 20px 0;
+}
+
+.make_announcement textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    resize: vertical;
+}
+
+.make_announcement button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.make_announcement button:hover {
+    background: #0056b3;
+}
+
+#announcement-status {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 4px;
+}

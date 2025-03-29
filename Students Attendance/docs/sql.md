@@ -172,3 +172,24 @@ CREATE TABLE QRCodes (
 4.  Execute the query.
 
 After executing this statement, you will have a new table named `QRCodes` in your database with the structure defined above. You can then proceed to implement the logic for generating random 8-letter codes, associating them with attendance sessions, and handling the code scanning and attendance marking process.
+
+**5. Teacher Announcements Table**
+
+```sql
+CREATE TABLE TeacherAnnouncements (
+    announcement_id INT PRIMARY KEY AUTO_INCREMENT,
+    teacher_id INT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (teacher_id) REFERENCES Users(user_id)
+);
+```
+
+**Explanation:**
+
+*   `announcement_id`: Unique identifier for each announcement
+*   `teacher_id`: Foreign key linking to the teacher who made the announcement
+*   `content`: The actual announcement text
+*   `created_at`: When the announcement was first made
+*   `updated_at`: When the announcement was last updated
+*   Foreign key ensures only valid teachers can make announcements

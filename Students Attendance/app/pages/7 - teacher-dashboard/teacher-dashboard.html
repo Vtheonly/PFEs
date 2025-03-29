@@ -16,6 +16,7 @@
                     <ul>
                         <li><a href="../10 - Qr Genration/qr.html">QR Code</a></li>
                         <li><a href="#">Theme : Light</a></li>
+                        <li><a href="../6 - anouncement/anouncement.php">Announcement</a></li>
                         <li><a href="../0 - landing/index.html">Logout</a></li>
                     </ul>
                 </nav>
@@ -69,6 +70,15 @@
                         <div id="session-status"></div>
                     </section>
                 </section>
+
+                <section class="make_announcement">
+                    <textarea id="announcement-text" placeholder="Write your announcement here..."></textarea>
+                    <button id="post-announcement">Post Announcement</button>
+                    <div id="announcement-status"></div>
+                </section>
+
+
+
                 <section class="students-section">
                     <h2>Students</h2>
                     <div id="loading-status"></div>
@@ -223,6 +233,41 @@
 
                 // Reload students every minute
                 setInterval(loadStudents, 60000);
+
+                // Add announcement handling
+                const announcementText = document.getElementById('announcement-text');
+                const postButton = document.getElementById('post-announcement');
+                const statusDiv = document.getElementById('announcement-status');
+
+                postButton.addEventListener('click', async () => {
+                    if (!announcementText.value.trim()) {
+                        statusDiv.innerHTML = '<div style="color: red;">Please write an announcement first</div>';
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('make_announcement.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                content: announcementText.value.trim()
+                            })
+                        });
+
+                        const data = await response.json();
+                        if (data.success) {
+                            statusDiv.innerHTML = '<div style="color: green;">Announcement posted successfully!</div>';
+                            announcementText.value = ''; // Clear the textarea
+                        } else {
+                            statusDiv.innerHTML = `<div style="color: red;">${data.error}</div>`;
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        statusDiv.innerHTML = '<div style="color: red;">Failed to post announcement</div>';
+                    }
+                });
             });
         </script>
     </body>
