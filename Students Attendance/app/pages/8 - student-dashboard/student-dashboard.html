@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,7 +7,6 @@
         <link rel="stylesheet" href="student-dashboard.css" />
         <script src="https://unpkg.com/html5-qrcode"></script>
     </head>
-
     <body>
         <div class="dashboard-container">
             <aside class="sidebar">
@@ -16,17 +14,40 @@
                 <nav class="sidebar-nav">
                     <ul>
                         <li><a href="#">Theme : Light</a></li>
-                        <li><a href="../6 - anouncement/anouncement.html">Announcement</a></li>
-                       
+                        <li><a href="../6 - anouncement/anouncement.php">Announcement</a></li>
                         <li><a href="../0 - landing/index.html">Logout</a></li>
                     </ul>
                 </nav>
             </aside>
             <main class="main-content">
                 <header class="main-header">
-                    <h1>Welcome, <span id="welcomeUsername">AMA</span></h1>
-
+                    <h1>Welcome!</h1>
+                    <div class="user-info">
+                        <span class="username" id="welcomeUsername">Loading...</span>
+                        <span class="role">Student</span>
+                        <div class="profile-icon" id="profileIcon">-</div>
+                    </div>
                 </header>
+
+                <!-- Statistics Section -->
+                <section class="statistics-section">
+                    <div class="stats-card week-stats">
+                        <h3>Attendance per week</h3>
+                        <div class="progress-circle" id="week-progress">0%</div>
+                        <p>Last 7 Days</p>
+                    </div>
+                    <div class="stats-card month-stats">
+                        <h3>Attendance per month</h3>
+                        <div class="progress-circle" id="month-progress">0%</div>
+                        <p>Last 30 Days</p>
+                    </div>
+                    <div class="stats-card semester-stats">
+                        <h3>Attendance per semester</h3>
+                        <div class="progress-circle" id="semester-progress">0%</div>
+                        <p>Last 6 Months</p>
+                    </div>
+                </section>
+
                 <section class="attendance-status-section">
                     <h2>Attendance Status</h2>
                     <div class="status-box">
@@ -34,38 +55,11 @@
                         <div id="qr-reader-results"></div>
                         <div class="manual-entry">
                             <input type="text" id="manual-code" placeholder="Enter code manually" />
-                            <button onclick="submitCode(document.getElementById('manual-code').value)">
-                                Submit
-                            </button>
-                            <aside class="sidebar">
-                                <div class="sidebar-header">Teacher Dashboard</div>
-                                <nav class="sidebar-nav">
-                                    <ul>
-                                        <li><a href="../10 - Qr Genration/qr.html">QR Code</a></li>
-                                        <li><a href="#">Theme : Light</a></li>
-                                        <li><a href="../0 - landing/index.html">Logout</a></li>
-                                    </ul>
-                                </nav>
-                            </aside>                     </div>
+                            <button onclick="submitCode(document.getElementById('manual-code').value)">Submit</button>
+                        </div>
                     </div>
                 </section>
-                <section class="attendance-summary-section">
-                    <div class="summary-card week-attendance">
-                        <h3>Attendance This Week</h3>
-                        <div class="progress-circle">85%</div>
-                        <p>Updated Today</p>
-                    </div>
-                    <div class="summary-card month-attendance">
-                        <h3>Attendance This Month</h3>
-                        <div class="progress-circle">90%</div>
-                        <p>Updated Yesterday</p>
-                    </div>
-                    <div class="summary-card overall-attendance">
-                        <h3>Overall Attendance</h3>
-                        <div class="progress-circle">92%</div>
-                        <p>Last Semester</p>
-                    </div>
-                </section>
+
                 <section class="attendance-details-section">
                     <h2>Attendance Details</h2>
                     <table>
@@ -88,23 +82,10 @@
                     </table>
                 </section>
 
-                <iframe class="chat-section" src="../9 - chat-panel/chat-panel.html" frameborder="0">
-                </iframe>
+                <iframe class="chat-section" src="../9 - chat-panel/chat-panel.html" frameborder="0"></iframe>
             </main>
         </div>
-        <style>
-            .show-more-btn {
-                width: 100%;
-                padding: 8px;
-                background-color: #f0f0f0;
-                border: none;
-                cursor: pointer;
-                transition: background-color 0.3s;
-            }
-            .show-more-btn:hover {
-                background-color: #e0e0e0;
-            }
-        </style>
+
         <script>
             async function fetchUsername() {
                 try {
@@ -112,15 +93,36 @@
                     const data = await response.json();
                     if (data.success) {
                         document.getElementById('welcomeUsername').textContent = data.username;
-                        document.getElementById('headerUsername').textContent = data.username;
+                        // Set profile icon to first letter of username
+                        document.getElementById('profileIcon').textContent = data.username.charAt(0).toUpperCase();
                     }
                 } catch (error) {
                     console.error('Error fetching username:', error);
+                    document.getElementById('welcomeUsername').textContent = 'Student';
+                }
+            }
+
+            // Add this function to load statistics
+            async function loadStatistics() {
+                try {
+                    const response = await fetch('statistic.php');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        document.getElementById('week-progress').textContent = data.stats.week + '%';
+                        document.getElementById('month-progress').textContent = data.stats.month + '%';
+                        document.getElementById('semester-progress').textContent = data.stats.semester + '%';
+                    } else {
+                        console.error('Failed to load statistics:', data.error);
+                    }
+                } catch (error) {
+                    console.error('Error loading statistics:', error);
                 }
             }
 
             document.addEventListener("DOMContentLoaded", function () {
                 fetchUsername();  // Fetch username when page loads
+                loadStatistics(); // Load initial statistics
                 console.log("Initializing QR scanner...");
                 const html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", {
                     fps: 10,
@@ -128,8 +130,11 @@
                     rememberLastUsedCamera: true,
                 });
                 html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-                loadAttendanceRecords(currentLimit); // Load initial records
+                loadAttendanceRecords(currentLimit);
             });
+
+            // Reload statistics every 5 minutes
+            setInterval(loadStatistics, 300000);
 
             function onScanSuccess(decodedText, decodedResult) {
                 console.log("Scanned QR code: ", decodedText);
@@ -218,5 +223,4 @@
             });
         </script>
     </body>
-
 </html>
