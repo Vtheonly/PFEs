@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +18,10 @@
                     <?php else: ?>
                         <li><a href="../8 - student-dashboard/">Back to Dashboard</a></li>
                     <?php endif; ?>
-                    <li><a href="#">Theme : Light</a></li>
+                    <li><button class="theme-toggle" onclick="toggleTheme()">
+                        <span id="theme-icon">🌞</span>
+                        <span id="theme-text">Dark Mode</span>
+                    </button></li>
                     <li><a href="../0 - landing/index.html">Logout</a></li>
                 </ul>
             </nav>
@@ -45,5 +48,29 @@
             </div>
         </main>
     </div>
+
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update button text and icon
+            document.getElementById('theme-icon').textContent = newTheme === 'light' ? '🌞' : '🌙';
+            document.getElementById('theme-text').textContent = newTheme === 'light' ? 'Dark Mode' : 'Light Mode';
+        }
+
+        // Initialize theme from localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('theme-icon').textContent = savedTheme === 'light' ? '🌞' : '🌙';
+            document.getElementById('theme-text').textContent = savedTheme === 'light' ? 'Dark Mode' : 'Light Mode';
+        });
+    </script>
 </body>
 </html>

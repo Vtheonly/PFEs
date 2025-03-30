@@ -1,3 +1,32 @@
+/* Theme Variables */
+:root[data-theme='light'] {
+    --bg-color: #f0f2f5;
+    --text-color: #333;
+    --sidebar-bg: #f5f5f5;
+    --card-bg: white;
+    --border-color: #ddd;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --hover-bg: #e0e0e0;
+    --message-sent-bg: #007bff;
+    --message-received-bg: #f0f0f0;
+    --message-sent-text: white;
+    --message-received-text: #333;
+}
+
+:root[data-theme='dark'] {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --sidebar-bg: #2d2d2d;
+    --card-bg: #333333;
+    --border-color: #404040;
+    --shadow-color: rgba(255, 255, 255, 0.1);
+    --hover-bg: #404040;
+    --message-sent-bg: #0056b3;
+    --message-received-bg: #404040;
+    --message-sent-text: white;
+    --message-received-text: #ffffff;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -7,39 +36,35 @@
 body {
     font-family: sans-serif;
     margin: 0;
-    background-color: #f0f2f5; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 .chat-container {
-    background-color: white;
+    background-color: var(--card-bg);
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px var(--shadow-color);
     display: flex;
-    width: 90%; /* Adjust as needed */
-    height: 100vh; /* Adjust as needed */
-    overflow: hidden; /* To prevent content from overflowing rounded corners */
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
     font-family: Arial, sans-serif;
-    border: solid 2px rgba(0, 0, 0, 0.301);
 }
 
 /* Users List (Sidebar) */
 .users-list {
     width: 250px;
-    background: #f5f5f5;
+    background: var(--sidebar-bg);
     padding: 20px;
-    border-right: 1px solid #ddd; /* Light grey border */
-    box-sizing: border-box; /* Ensure padding is inside width */
+    border-right: 1px solid var(--border-color);
+    box-sizing: border-box;
     overflow-y: auto;
 }
 
 .users-list h2 {
     margin-top: 0;
     margin-bottom: 20px;
-    color: #333; /* Dark grey heading */
+    color: var(--text-color);
 }
 
 .users-list ul {
@@ -54,85 +79,80 @@ body {
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.2s ease;
+    color: var(--text-color);
 }
 
 .users-list li:hover {
-    background-color: #e0e0e0;
+    background-color: var(--hover-bg);
 }
 
 .users-list li.active {
-    background-color: #007bff;
-    color: white;
+    background-color: var(--hover-bg);
     font-weight: bold;
 }
 
-/* Conversation Area (Main Content) */
+/* Conversation Area */
 .conversation-area {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    background: var(--card-bg);
 }
 
 .conversation-header {
     padding: 20px;
-    background: #fff;
-    border-bottom: 1px solid #ddd; /* Light grey border */
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
     font-weight: bold;
-    color: #333;
+    color: var(--text-color);
 }
 
 .message-display {
     flex-grow: 1;
     padding: 20px;
-    overflow-y: auto; /* Enable vertical scrolling for messages */
-    background: #fff;
+    overflow-y: auto;
+    background: var(--bg-color);
     display: flex;
-    flex-direction: column; /* Messages stack from top to bottom */
+    flex-direction: column;
     gap: 10px;
 }
 
 .message {
     padding: 10px 15px;
     border-radius: 15px;
-    margin-bottom: 5px;
-    max-width: 70%; /* Prevent messages from taking full width */
-    clear: both; /* Ensure proper float clearing */
+    max-width: 70%;
+    clear: both;
     position: relative;
+    margin-bottom: 10px;
 }
 
 .message.sent {
-    background-color: #007bff; /* Light green for sent messages */
-    color: white;
-    align-self: flex-end; /* Align sent messages to the right */
-    float: right;
+    background-color: var(--message-sent-bg);
+    color: var(--message-sent-text);
+    align-self: flex-end;
     border-bottom-right-radius: 5px;
 }
 
 .message.received {
-    background-color: #f0f0f0; /* White for received messages */
-    align-self: flex-start; /* Align received messages to the left */
-    float: left;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1); /* Subtle shadow for received messages */
+    background-color: var(--message-received-bg);
+    color: var(--message-received-text);
+    align-self: flex-start;
     border-bottom-left-radius: 5px;
 }
 
 .timestamp {
     font-size: 0.7em;
-    color: #666;
     margin-top: 5px;
     display: block;
-}
-
-.message.sent .timestamp {
-    color: rgba(255, 255, 255, 0.8);
+    opacity: 0.8;
 }
 
 .message-input-area {
     padding: 20px;
-    border-top: 1px solid #ddd; /* Light grey border */
+    border-top: 1px solid var(--border-color);
     display: flex;
     align-items: center;
-    background: #fff;
+    background: var(--card-bg);
     gap: 10px;
 }
 
@@ -140,8 +160,9 @@ body {
     flex-grow: 1;
     padding: 10px;
     border-radius: 5px;
-    border: 1px solid #ccc; /* Light grey border */
-    margin-right: 10px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-color);
+    color: var(--text-color);
     outline: none;
 }
 
@@ -149,7 +170,7 @@ body {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff; /* Blue button */
+    background-color: var(--message-sent-bg);
     color: white;
     cursor: pointer;
     font-weight: bold;
@@ -157,7 +178,7 @@ body {
 }
 
 .message-input-area button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: var(--hover-bg);
 }
 
 /* Scrollbar styling */
@@ -166,14 +187,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--bg-color);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #888;
+    background: var(--hover-bg);
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: var(--border-color);
 }

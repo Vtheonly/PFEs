@@ -1,10 +1,65 @@
+/* Theme Variables */
+:root[data-theme='light'] {
+    --bg-color: #f0f2f5;
+    --text-color: #333;
+    --sidebar-bg: #e0e7ff;
+    --card-bg: white;
+    --border-color: #ddd;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --hover-bg: #d1d5db;
+}
+
+:root[data-theme='dark'] {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --sidebar-bg: #1e293b;  /* Darker background for better contrast */
+    --card-bg: #333333;
+    --border-color: #404040;
+    --shadow-color: rgba(255, 255, 255, 0.1);
+    --hover-bg: #404040;
+}
+
+/* Update existing styles to use variables */
 body {
     font-family: sans-serif;
     margin: 0;
-    background-color: #f0f2f5;
-    /* Light grey background */
-    color: #333;
-    /* Dark grey text */
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.sidebar {
+    background-color: var(--sidebar-bg);
+}
+
+.sidebar-nav a {
+    color: var(--text-color);
+}
+
+.sidebar-nav a:hover {
+    background-color: var(--hover-bg);
+}
+
+.main-content section, .stats-card, .open-attendance-section, .students-section, .messages-section, .make_announcement {
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 4px var(--shadow-color);
+    border: 1px solid var(--border-color);
+}
+
+/* Theme Toggle Button Styles */
+.theme-toggle {
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.theme-toggle:hover {
+    background-color: var(--hover-bg);
 }
 
 .dashboard-container {
@@ -15,8 +70,6 @@ body {
 .sidebar {
     width: 250px;
     box-sizing: border-box;
-    background-color: #e0e7ff;
-    /* Light blue sidebar background - similar to Tailwind indigo-100 */
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
     height: 100vh;
@@ -51,13 +104,13 @@ body {
     display: block;
     padding: 10px 15px;
     text-decoration: none;
-    color: #333;
+    color: var(--text-color);
     border-radius: 6px;
     transition: background-color 0.2s ease;
 }
 
 .sidebar-nav a:hover {
-    background-color: #d1d5db;
+    background-color: var(--hover-bg);
     /* Light grey on hover - similar to Tailwind gray-300 */
 }
 
@@ -125,10 +178,8 @@ body {
 }
 
 .stats-card {
-    background-color: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
     /* Distribute space evenly */
 }
@@ -151,10 +202,8 @@ body {
 /* Open Attendance Section */
 .open-attendance-section {
     width: 20vw;
-    background-color: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
 }
 
@@ -230,10 +279,8 @@ body {
 
 /* Students Section */
 .students-section {
-    background-color: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
 }
 
@@ -250,14 +297,13 @@ body {
 .students-section th,
 .students-section td {
     padding: 8px 12px;
-    border-bottom: 1px solid #ddd;
-    /* Light grey table border */
+    border-bottom: 1px solid var(--border-color);
     text-align: left;
 }
 
 .students-section th {
-    background-color: #f9f9f9;
-    /* Very light grey header background */
+    background-color: var(--sidebar-bg);
+    color: var(--text-color);
     font-weight: bold;
 }
 
@@ -278,10 +324,8 @@ body {
 
 
 .messages-section {
-    background-color: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .messages-section h2 {
@@ -371,4 +415,150 @@ body {
     margin-top: 10px;
     padding: 10px;
     border-radius: 4px;
+}
+
+/* Form and Input Styles */
+textarea,
+input[type="date"],
+input[type="time"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-size: 14px;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+textarea:focus,
+input[type="date"]:focus,
+input[type="time"]:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* Date and Time Input Specific Styles */
+input[type="date"],
+input[type="time"] {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 30px;
+    cursor: pointer;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    filter: invert(var(--calendar-invert));
+}
+
+:root[data-theme='dark'] {
+    --calendar-invert: 1;
+}
+
+:root[data-theme='light'] {
+    --calendar-invert: 0;
+}
+
+/* Enhanced Table Styles */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 16px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+th {
+    background-color: var(--sidebar-bg);
+    color: var(--text-color);
+    font-weight: 600;
+    text-align: left;
+    padding: 16px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+    background-color: var(--hover-bg);
+}
+
+/* Textarea specific styles */
+textarea {
+    min-height: 120px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+textarea::placeholder {
+    color: #666;
+}
+
+:root[data-theme='dark'] textarea::placeholder {
+    color: #999;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+/* Status Messages */
+.status-message {
+    padding: 12px;
+    border-radius: 6px;
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.status-message.success {
+    background-color: #ecfdf5;
+    color: #047857;
+    border: 1px solid #059669;
+}
+
+.status-message.error {
+    background-color: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #dc2626;
+}
+
+:root[data-theme='dark'] .status-message.success {
+    background-color: rgba(4, 120, 87, 0.2);
+    color: #34d399;
+    border-color: #059669;
+}
+
+:root[data-theme='dark'] .status-message.error {
+    background-color: rgba(185, 28, 28, 0.2);
+    color: #f87171;
+    border-color: #dc2626;
 }
