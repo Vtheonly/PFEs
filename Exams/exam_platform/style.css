@@ -1,0 +1,287 @@
+@font-face {
+    font-family: 'OpenSans';
+    src: url('https://fonts.gstatic.com/s/opensans/v20/mem8YaGs126MiZpBA-UFVZ0b.woff2') format('woff2');
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'OpenSans', Arial, sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    line-height: 1.6;
+}
+
+
+header {
+    background-image: url('header-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    height: 60px;
+    float: left;
+}
+
+h1 {
+    font-size: 24px;
+    color: #fff;
+}
+
+
+nav {
+    background-color: #333;
+    padding: 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+}
+
+nav ul li a:hover {
+    background-color: #555;
+    border-radius: 4px;
+}
+
+
+main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.exam-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+}
+
+.exam-card h2 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.exam-card p {
+    margin-bottom: 15px;
+}
+
+.exam-instructions {
+    background-color: #eaf2ff;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.exam-instructions h3 {
+    color: #3498db;
+    margin-bottom: 10px;
+}
+
+.exam-instructions ul {
+    background: #fff;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    padding: 18px 28px;
+    margin: 0;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.08);
+    list-style-position: inside;
+}
+
+.exam-instructions ul li {
+    margin-bottom: 10px;
+    color: #2c3e50;
+    font-size: 1.05em;
+}
+
+.exam-button {
+    display: inline-block;
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.exam-button:hover {
+    background-color: #2980b9;
+}
+
+
+footer {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.student-info {
+    margin: 10px;
+}
+
+.icon {
+    margin-right: 10px;
+}
+
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+}
+
+.login-box {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.error-message {
+    color: red;
+    margin: 10px 0;
+    text-align: center;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+.exam-page main {
+    margin-left: 220px;
+    margin-right: 220px;
+    position: relative;
+}
+
+aside {
+    position: fixed;
+    width: 200px;
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.guidelines {
+    left: 10px;
+    top: 150px;
+    height: 400px;
+    overflow: hidden;
+}
+
+.timer {
+    right: 10px;
+    top: 150px;
+    text-align: center;
+}
+
+#countdown {
+    font-size: 24px;
+    font-weight: bold;
+    color: #3498db;
+    margin-top: 10px;
+}
+
+.scrolling-content {
+    height: 320px;
+    overflow-y: auto;
+}
+
+.question {
+    margin-bottom: 20px;
+}
+
+.options {
+    margin-top: 10px;
+}
+
+.options label {
+    display: block;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+hr {
+    margin: 20px 0;
+    border: none;
+    height: 1px;
+    background-color: #ddd;
+}
+
+.submit-container {
+    text-align: center;
+    margin-top: 30px;
+}
+
+#score-display {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+}
