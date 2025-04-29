@@ -1,47 +1,45 @@
+document.addEventListener("DOMContentLoaded", function () {
+  const loginForm = document.getElementById("loginForm");
+  const errorMessage = document.getElementById("errorMessage");
 
-document.addEventListener("DOMContentLoaded", function() {
-    
-    var loginForm = document.getElementById("loginForm");
-    var errorMessage = document.getElementById("errorMessage");
-    
-    
-    loginForm.addEventListener("submit", function(event) {
-        
-        event.preventDefault();
-        
-        
-        var username = document.getElementById("username").value;
-        var password = document.getElementById("password").value;
-        
-        
-        
-        
-        
-        var validCredentials = [
-            { username: "student1", password: "pass123" },
-            { username: "student2", password: "pass456" },
-            { username: "student3", password: "pass789" }
-        ];
-        
-        
-        var isValid = false;
-        for (var i = 0; i < validCredentials.length; i++) {
-            if (validCredentials[i].username === username && 
-                validCredentials[i].password === password) {
-                isValid = true;
-                break;
-            }
+  loginForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+    const username = usernameInput.value;
+    const password = passwordInput.value;
+
+    errorMessage.textContent = "";
+
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("password", password);
+
+    fetch("verify_login.php", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Erreur serveur: ${response.statusText}`);
         }
-        
-        if (isValid) {
-            
-            sessionStorage.setItem("currentUser", username);
-            
-            
-            window.location.href = "index.html";
+
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          sessionStorage.setItem("currentUser", username);
+          window.location.href = "index.html";
         } else {
-            
-            errorMessage.textContent = "Invalid username or password. Please try again.";
+          errorMessage.textContent =
+            data.message || "Nom d'utilisateur ou mot de passe invalide.";
         }
-    });
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la connexion:", error);
+        errorMessage.textContent =
+          "Une erreur s'est produite lors de la connexion. Veuillez réessayer.";
+      });
+  });
 });
