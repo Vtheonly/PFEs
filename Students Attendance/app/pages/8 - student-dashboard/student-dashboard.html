@@ -25,6 +25,7 @@
                     <div class="user-info">
                         <span class="username" id="welcomeUsername">Loading...</span>
                         <span class="role">Student</span>
+                        <span id="group">0</span>
                         <div class="profile-icon" id="profileIcon">-</div>
                     </div>
                 </header>
@@ -91,14 +92,34 @@
                 try {
                     const response = await fetch('get_username.php');
                     const data = await response.json();
+
                     if (data.success) {
                         document.getElementById('welcomeUsername').textContent = data.username;
-                        // Set profile icon to first letter of username
                         document.getElementById('profileIcon').textContent = data.username.charAt(0).toUpperCase();
+                        fetchGroup();
                     }
                 } catch (error) {
                     console.error('Error fetching username:', error);
                     document.getElementById('welcomeUsername').textContent = 'Student';
+                }
+            }
+
+            async function fetchGroup() {
+                try {
+                    const response = await fetch('get_group.php');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    if (data && data.success && data.group) {
+                        document.getElementById('group').textContent = 'Group ' + data.group;
+                    } else {
+                        throw new Error('Invalid response structure');
+                    }
+                } catch (error) {
+                    console.error('Error fetching group data:', error);
+                    document.getElementById('group').textContent = 'Error loading group';
+                    alert('Failed to load group: ' + error.message); // This will help debug the issue
                 }
             }
 
@@ -123,6 +144,7 @@
             document.addEventListener("DOMContentLoaded", function () {
                 fetchUsername();  // Fetch username when page loads
                 loadStatistics(); // Load initial statistics
+                fetchGroup()
                 console.log("Initializing QR scanner...");
                 const html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", {
                     fps: 10,

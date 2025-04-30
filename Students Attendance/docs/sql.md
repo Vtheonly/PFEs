@@ -8,7 +8,8 @@ CREATE TABLE Users (
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL, -- Storing password in plain text (for simplicity, NOT recommended for production)
-    role ENUM('teacher', 'student') NOT NULL
+    role ENUM('teacher', 'student') NOT NULL,
+   `group` INT NULL -- Group number for students, group taught for teachers (one group only)
 );
 ```
 
@@ -19,6 +20,7 @@ CREATE TABLE Users (
 *   `email`:  User's email address, must be unique across all users and cannot be empty.
 *   `password`: User's password (stored in plain text for simplicity in this example - **never do this in a real application**).  **Important: In a real-world application, you should NEVER store passwords in plain text. Use proper hashing techniques like bcrypt, Argon2, or similar.**
 *   `role`:  Indicates whether the user is a 'teacher' or a 'student'.  Using `ENUM` restricts the possible values to these two options, ensuring data consistency.
+*   `group`: An integer (`INT`) representing group affiliation. For students, this field stores their assigned group number. For teachers, it stores the number of the single group they are responsible for teaching. Each teacher is constrained to teaching only one group. If a user is not assigned to a group, this field can be `NULL`.
 
 **2. Attendance Sessions Table**
 

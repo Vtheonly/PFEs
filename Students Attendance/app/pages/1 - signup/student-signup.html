@@ -20,6 +20,24 @@
                 <div class="input-group">
                     <input type="password" id="password" placeholder="Password" required>
                 </div>
+                <!-- Added Group Selection Dropdown -->
+                <div class="input-group">
+                    <label for="group">Group:</label>
+                    <select id="group" required>
+                        <option value="" disabled selected>Select a Group</option>
+                        <option value="1">Group 1</option>
+                        <option value="2">Group 2</option>
+                        <option value="3">Group 3</option>
+                        <option value="4">Group 4</option>
+                        <option value="5">Group 5</option>
+                        <option value="6">Group 6</option>
+                        <option value="7">Group 7</option>
+                        <option value="8">Group 8</option>
+                        <option value="9">Group 9</option>
+                        <option value="10">Group 10</option>
+                    </select>
+                </div>
+                <!-- End of Added Group Selection -->
                 <button type="submit" class="signup-button">Signup</button>
             </form>
         </div>
@@ -27,13 +45,20 @@
     <script>
         document.getElementById('studentSignupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const formData = {
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
                 password: document.getElementById('password').value,
+                group: document.getElementById('group').value, // Get group value
                 role: 'student'
             };
+
+            // Basic validation for group selection
+            if (!formData.group) {
+                alert('Please select a group.');
+                return;
+            }
 
             try {
                 const response = await fetch('signup_main.php', {
@@ -44,14 +69,22 @@
                     body: JSON.stringify(formData)
                 });
 
+                // It's good practice to check if the response is ok before parsing JSON
+                if (!response.ok) {
+                    // Try to get error text or default message
+                    let errorText = await response.text();
+                    throw new Error(`Server error: ${response.status} - ${errorText || 'Unknown error'}`);
+                }
+
                 const result = await response.json();
                 if (result.success) {
                     alert(result.message);
                     window.location.href = '../2 - login/student-login.html';
                 } else {
-                    alert(result.message);
+                    alert(`Signup failed: ${result.message}`); // More specific error message
                 }
             } catch (error) {
+                console.error('Error during signup fetch:', error); // Log the error for debugging
                 alert('Error during signup: ' + error.message);
             }
         });
