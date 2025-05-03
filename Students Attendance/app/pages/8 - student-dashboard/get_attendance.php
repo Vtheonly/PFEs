@@ -11,8 +11,10 @@ $student_id = $_SESSION['user_id'];
 $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 5; // Default to 5 records
 
 $query = "SELECT 
+a.record_id,
     a.timestamp,
     a.attendance_status,
+    a.justification_status,
     s.date,
     s.start_time,
     s.end_time
@@ -30,11 +32,15 @@ $result = $stmt->get_result();
 $records = [];
 while ($row = $result->fetch_assoc()) {
     $records[] = [
+       'record_id' => $row['record_id'],
         'date' => $row['date'],
         'time' => $row['start_time'],
-        'status' => $row['attendance_status']
+       'status' => $row['attendance_status'],
+       'attendance_status' => $row['attendance_status'],
+       'justification_status' => $row['justification_status']
     ];
 }
 
 echo json_encode(['success' => true, 'records' => $records]);
 $conn->close();
+

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Justification</title>
+    <link rel="stylesheet" href="../7 - teacher-dashboard/teacher-dashboard.css"> <!-- Reuse styles -->
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .justification-container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid var(--border-color);
+        }
+        .justification-container h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--text-color);
+        }
+        #absence-details {
+            background-color: var(--bg-color);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            font-size: 0.95em;
+        }
+         textarea {
+            min-height: 150px;
+            margin-bottom: 20px;
+        }
+        button {
+             background-color: #007bff;
+             color: white;
+             padding: 12px 25px;
+             border: none;
+             border-radius: 6px;
+             cursor: pointer;
+             font-size: 1em;
+             width: 100%;
+             transition: background-color 0.2s ease;
+        }
+        button:hover {
+             background-color: #0056b3;
+        }
+        #status-message {
+            margin-top: 15px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+        }
+         .back-link {
+             display: block;
+             text-align: center;
+             margin-top: 20px;
+             color: #007bff;
+             text-decoration: none;
+         }
+         .back-link:hover {
+             text-decoration: underline;
+         }
+
+    </style>
+</head>
+<body>
+    <div class="justification-container">
+        <h2>Submit Justification for Absence</h2>
+        <div id="absence-details">Loading absence details...</div>
+        <form id="justification-form">
+            <input type="hidden" id="record_id" name="record_id">
+            <div class="form-group">
+                <label for="justification_text">Your Justification:</label>
+                <textarea id="justification_text" name="justification_text" rows="5" required placeholder="Explain why you were absent..."></textarea>
+            </div>
+            <button type="submit">Submit Justification</button>
+        </form>
+        <div id="status-message"></div>
+         <a href="student-dashboard.html" class="back-link">Back to Dashboard</a>
+    </div>
+
+    <script>
+        // Theme sync (optional, copy from chat panel if needed)
+        // ...
+
+        const absenceDetailsDiv = document.getElementById('absence-details');
+        const justificationForm = document.getElementById('justification-form');
+        const recordIdInput = document.getElementById('record_id');
+        const justificationTextInput = document.getElementById('justification_text');
+        const statusMessageDiv = document.getElementById('status-message');
+
+        // Get record_id from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const recordId = urlParams.get('record_id');
+
+  
+                async function fetchAbsenceDetails(id) {
+             if (!id) {
+                 absenceDetailsDiv.innerHTML = '<p style="color: red;">Error: Missing record ID.</p>';
+                 justificationForm.style.display = 'none'; // Hide form if no ID
+                 return;
+             }
+            recordIdInput.value = id;
+            console.log("Fetching details for record_id:", id); // Log ID
+
+            try {
+                const response = await fetch(`get_single_attendance.php?record_id=${id}`);
+                console.log("Fetch response status:", response.status); // Log status
+
+                const responseText = await response.text(); // Get raw text first
+                console.log("Raw response text:", responseText); // <<< LOG RAW TEXT
+
+                if (!response.ok) {
+                    // Try to parse error from text if possible, otherwise use status
+                    let errorMsg = `HTTP error! status: ${response.status}`;
+                    try {
+                        const errorData = JSON.parse(responseText);
+                        if (errorData && errorData.error) errorMsg = errorData.error;
+                    } catch (e) {} // Ignore JSON parse error here
+                    throw new Error(errorMsg);
+                }
+
+                // Try to parse JSON
+                let data;
+                try {
+                    data = JSON.parse(responseText); // Try parsing the stored text
+                    console.log("Parsed JSON data:", data); // Log parsed data
+                } catch (jsonError) {
+                    console.error("JSON Parsing Error:", jsonError);
+                    throw new Error(`Failed to parse server response. Server sent: ${responseText}`); // Include raw text in error
+                }
+
+                // --- Rest of your logic using 'data' ---
+                if (data.success && data.record) {
+                    console.log("Data success. Record:", data.record); // Log the record object
+                    const record = data.record;
+                    // --- Existing display logic ---
+                    absenceDetailsDiv.innerHTML = `
+                        <p><strong>Date:</strong> ${record.date || 'N/A'}</p>
+                        <p><strong>Time:</strong> ${record.start_time || 'N/A'} - ${record.end_time || 'N/A'}</p>
+                        <p><strong>Status:</strong> ${record.attendance_status || 'N/A'}</p>
+                        <p><strong>Justification Status:</strong> ${record.justification_status || 'Not Submitted'}</p>
+                        ${record.justification ? `<p><strong>Previous Justification:</strong> ${record.justification}</p>` : ''}
+                    `;
+
+                    // Optionally hide form if already justified or not absent
+                    if (record.attendance_status !== 'absent' || record.justification_status !== null) {
+                        justificationForm.style.display = 'none';
+                         absenceDetailsDiv.innerHTML += '<p style="color: orange;">Justification cannot be submitted for this record (not absent or already processed).</p>';
+                    } else {
+                        justificationForm.style.display = 'block';
+                    }
+                    // --- End of existing display logic ---
+                } else {
+                     console.error("Server responded success=false or missing record:", data); // Log failure case
+                     throw new Error(data.error || 'Record not found or invalid.');
+                }
+                // --- End of rest of your logic ---
+
+            } catch (error) {
+                 console.error('Error in fetchAbsenceDetails:', error); // Log the caught error
+                 absenceDetailsDiv.innerHTML = `<p style="color: red;">Error loading details: ${error.message}</p>`;
+                 justificationForm.style.display = 'none';
+            }
+        }
+
+
+
+
+        justificationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            statusMessageDiv.textContent = 'Submitting...';
+            statusMessageDiv.style.color = 'blue';
+            statusMessageDiv.style.backgroundColor = 'lightblue';
+
+            const formData = new FormData();
+            formData.append('record_id', recordIdInput.value);
+            formData.append('justification_text', justificationTextInput.value.trim());
+
+            if (!justificationTextInput.value.trim()) {
+                statusMessageDiv.textContent = 'Please enter your justification.';
+                statusMessageDiv.style.color = 'red';
+                statusMessageDiv.style.backgroundColor = '#ffebee';
+                return;
+            }
+
+            try {
+                const response = await fetch('submit_justification.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                // Get the raw response text first
+                const responseText = await response.text();
+                console.log('Raw server response:', responseText); // For debugging
+
+                // Try to parse the response as JSON
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('Failed to parse server response:', responseText);
+                    throw new Error('Server sent an invalid response. Please try again or contact support if the issue persists.');
+                }
+
+                if (data.success) {
+                    statusMessageDiv.textContent = data.message || 'Justification submitted successfully!';
+                    statusMessageDiv.style.color = 'green';
+                    statusMessageDiv.style.backgroundColor = '#e8f5e9';
+                    justificationForm.style.display = 'none';
+                    setTimeout(() => {
+                        window.location.href = 'student-dashboard.html';
+                    }, 2000);
+                } else {
+                    throw new Error(data.error || 'Failed to submit justification. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error submitting justification:', error);
+                statusMessageDiv.textContent = `Error: ${error.message}`;
+                statusMessageDiv.style.color = 'red';
+                statusMessageDiv.style.backgroundColor = '#ffebee';
+            }
+        });
+
+        // Fetch details when the page loads
+        fetchAbsenceDetails(recordId);
+
+         // Initialize theme from localStorage (if implementing theme toggle)
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            // You might need to copy the full theme toggle logic if needed
+        });
+
+    </script>
+</body>
+</html>
