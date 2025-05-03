@@ -12,9 +12,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
     exit;
 }
 
-function getAttendanceStats($teacher_id, $days) {
+function getAttendanceStats($teacher_id, $days)
+{
     global $conn;
-    
+
     try {
         $sql = "SELECT 
                     COUNT(DISTINCT CASE WHEN sar.attendance_status = 'present' THEN sar.student_id END) as present_count,
@@ -26,27 +27,27 @@ function getAttendanceStats($teacher_id, $days) {
                     AND s.date >= DATE_SUB(CURRENT_DATE, INTERVAL ? DAY)
                     AND s.status = 'closed'
                 GROUP BY DATE(s.date)";
-                
+
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ii", $teacher_id, $days);
         $stmt->execute();
         $result = $stmt->get_result();
-        
+
         $total_present = 0;
         $total_attendance = 0;
-        
+
         while ($row = $result->fetch_assoc()) {
             $total_present += $row['present_count'];
             $total_attendance += $row['total_students'];
         }
-        
+
         // Calculate percentage
-        $percentage = $total_attendance > 0 
-            ? round(($total_present / $total_attendance) * 100) 
+        $percentage = $total_attendance > 0
+            ? round(($total_present / $total_attendance) * 100)
             : 0;
-            
+
         return $percentage;
-        
+
     } catch (Exception $e) {
         error_log("Error calculating attendance stats: " . $e->getMessage());
         return 0;

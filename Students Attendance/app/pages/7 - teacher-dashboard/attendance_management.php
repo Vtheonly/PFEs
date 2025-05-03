@@ -1,10 +1,9 @@
 <?php
 session_start();
-require_once '../../../db_connect.php'; // Ensure this path is correct
+require_once '../../../db_connect.php';
 
 header('Content-Type: application/json');
 
-// Check if user is logged in and is a teacher
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
     echo json_encode(["success" => false, "error" => "Unauthorized access"]);
     exit;
@@ -14,8 +13,6 @@ function createAttendanceSession($teacher_id, $date, $start_time, $end_time) {
     global $conn;
 
     try {
-        // --- START NEW CODE ---
-        // Fetch the teacher's assigned group
         $group_sql = "SELECT `group` FROM Users WHERE user_id = ? AND role = 'teacher'";
         $group_stmt = $conn->prepare($group_sql);
         if (!$group_stmt) {
@@ -26,16 +23,13 @@ function createAttendanceSession($teacher_id, $date, $start_time, $end_time) {
         $group_result = $group_stmt->get_result();
         $teacher_data = $group_result->fetch_assoc();
 
-        if (!$teacher_data || $teacher_data['group'] === null || $teacher_data['group'] == 0) { // Also check for 0 if that means unassigned
+        if (!$teacher_data || $teacher_data['group'] === null || $teacher_data['group'] == 0) {
             return ["success" => false, "error" => "Teacher is not assigned to a group. Cannot create session."];
         }
         $session_group = $teacher_data['group'];
-        $group_stmt->close(); // Close the statement
-        // --- END NEW CODE ---
+        $group_stmt->close();
 
 
-        // First check if there's already an open session for this teacher today
-        // Consider if the check should be group-specific too, but usually one session per teacher per day is fine.
         $check_sql = "SELECT session_id FROM AttendanceSessions
                      WHERE teacher_id = ? AND date = ? AND status = 'open'";
         $check_stmt = $conn->prepare($check_sql);
@@ -47,39 +41,35 @@ function createAttendanceSession($teacher_id, $date, $start_time, $end_time) {
         $result = $check_stmt->get_result();
 
         if ($result->num_rows > 0) {
-            $check_stmt->close(); // Close the statement
+            $check_stmt->close();
             return ["success" => false, "error" => "You already have an open attendance session for today"];
         }
-        $check_stmt->close(); // Close the statement
+        $check_stmt->close();
 
-        // Create new session - **MODIFIED INSERT**
         $sql = "INSERT INTO AttendanceSessions (teacher_id, date, start_time, end_time, status, session_group)
-                VALUES (?, ?, ?, ?, 'open', ?)"; // Added session_group
+                VALUES (?, ?, ?, ?, 'open', ?)";
         $stmt = $conn->prepare($sql);
          if (!$stmt) {
             throw new Exception("Failed to prepare session insert query: " . $conn->error);
         }
-        // **MODIFIED BIND_PARAM** - added 'i' for session_group
         $stmt->bind_param("isssi", $teacher_id, $date, $start_time, $end_time, $session_group);
 
         if ($stmt->execute()) {
              $new_session_id = $conn->insert_id;
-             $stmt->close(); // Close the statement
+             $stmt->close();
             return [
                 "success" => true,
                 "session_id" => $new_session_id,
-                "message" => "Attendance session created successfully for Group " . $session_group // Added group info
+                "message" => "Attendance session created successfully for Group " . $session_group
             ];
         } else {
             $error_msg = $stmt->error;
-            $stmt->close(); // Close the statement
+            $stmt->close();
             throw new Exception("Failed to create attendance session: " . $error_msg);
         }
     } catch (Exception $e) {
-        // Log the detailed error for debugging
         error_log("Error in createAttendanceSession for teacher $teacher_id: " . $e->getMessage());
-        // Return a more specific or generic error to the user
-        return ["success" => false, "error" => $e->getMessage()]; // Or "Internal server error creating session."
+        return ["success" => false, "error" => $e->getMessage()];
     }
 }
 
@@ -88,10 +78,8 @@ function closeAttendanceSession($session_id, $teacher_id) {
     global $conn;
 
     try {
-        // Start a transaction to ensure all operations succeed or fail together
         $conn->begin_transaction();
 
-        // First, update the session status to closed
         $sql_close = "UPDATE AttendanceSessions
                 SET status = 'closed'
                 WHERE session_id = ? AND teacher_id = ? AND status = 'open'";
@@ -103,13 +91,11 @@ function closeAttendanceSession($session_id, $teacher_id) {
         $stmt_close->bind_param("ii", $session_id, $teacher_id);
         $stmt_close->execute();
 
-        // Check if the session was found and updated
         $affected_rows = $stmt_close->affected_rows;
-        $stmt_close->close(); // Close statement early
+        $stmt_close->close();
 
         if ($affected_rows <= 0) {
             $conn->rollback();
-            // Check if the session exists but is already closed or belongs to another teacher
             $check_exists_sql = "SELECT status, teacher_id FROM AttendanceSessions WHERE session_id = ?";
             $check_exists_stmt = $conn->prepare($check_exists_sql);
             $check_exists_stmt->bind_param("i", $session_id);
@@ -126,7 +112,6 @@ function closeAttendanceSession($session_id, $teacher_id) {
             return ["success" => false, "error" => "No open session found with that ID or unauthorized"];
         }
 
-        // Get the group for the session to mark only students of that group absent
         $group_sql = "SELECT session_group FROM AttendanceSessions WHERE session_id = ?";
         $group_stmt = $conn->prepare($group_sql);
          if (!$group_stmt) {
@@ -146,7 +131,6 @@ function closeAttendanceSession($session_id, $teacher_id) {
         }
 
 
-        // Now mark all students IN THAT GROUP who haven't marked attendance as absent
         $sql_absent = "INSERT INTO StudentAttendanceRecords (session_id, student_id, attendance_status)
                 SELECT
                     ?,
@@ -224,11 +208,10 @@ function getActiveSession($teacher_id) {
         }
     } catch (Exception $e) {
         error_log("Error getting active session for teacher $teacher_id: " . $e->getMessage());
-        return ["success" => false, "error" => $e->getMessage()]; // Or "Failed to check for active session."
+        return ["success" => false, "error" => $e->getMessage()];
     }
 }
 
-// Handle POST requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
@@ -267,11 +250,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(["success" => false, "error" => "Invalid action specified"]);
     }
 } else {
-    // Only allow POST requests for actions
     echo json_encode(["success" => false, "error" => "Invalid request method (POST required)"]);
 }
 
-// Close the connection at the very end if it's still open
 if (isset($conn) && $conn instanceof mysqli) {
      $conn->close();
 }

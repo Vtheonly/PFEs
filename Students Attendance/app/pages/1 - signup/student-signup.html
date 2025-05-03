@@ -20,7 +20,6 @@
                 <div class="input-group">
                     <input type="password" id="password" placeholder="Password" required>
                 </div>
-                <!-- Added Group Selection Dropdown -->
                 <div class="input-group">
                     <label for="group">Group:</label>
                     <select id="group" required>
@@ -37,7 +36,6 @@
                         <option value="10">Group 10</option>
                     </select>
                 </div>
-                <!-- End of Added Group Selection -->
                 <button type="submit" class="signup-button">Signup</button>
             </form>
         </div>
@@ -50,11 +48,10 @@
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
                 password: document.getElementById('password').value,
-                group: document.getElementById('group').value, // Get group value
+                group: document.getElementById('group').value,
                 role: 'student'
             };
 
-            // Basic validation for group selection
             if (!formData.group) {
                 alert('Please select a group.');
                 return;
@@ -69,9 +66,7 @@
                     body: JSON.stringify(formData)
                 });
 
-                // It's good practice to check if the response is ok before parsing JSON
                 if (!response.ok) {
-                    // Try to get error text or default message
                     let errorText = await response.text();
                     throw new Error(`Server error: ${response.status} - ${errorText || 'Unknown error'}`);
                 }
@@ -81,10 +76,10 @@
                     alert(result.message);
                     window.location.href = '../2 - login/student-login.html';
                 } else {
-                    alert(`Signup failed: ${result.message}`); // More specific error message
+                    alert(`Signup failed: ${result.message}`);
                 }
             } catch (error) {
-                console.error('Error during signup fetch:', error); // Log the error for debugging
+                console.error('Error during signup fetch:', error);
                 alert('Error during signup: ' + error.message);
             }
         });

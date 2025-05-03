@@ -32,7 +32,6 @@
           </div>
         </header>
 
-        <!-- Statistics Section -->
         <section class="statistics-section">
           <div class="stats-card week-stats">
             <h3>Attendance per week</h3>
@@ -80,9 +79,7 @@
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody id="attendanceRecords">
-              <!-- Records will be loaded here -->
-            </tbody>
+            <tbody id="attendanceRecords"></tbody>
             <tfoot>
               <tr>
                 <td colspan="2">
@@ -139,11 +136,10 @@
         } catch (error) {
           console.error("Error fetching group data:", error);
           document.getElementById("group").textContent = "Error loading group";
-          alert("Failed to load group: " + error.message); // This will help debug the issue
+          alert("Failed to load group: " + error.message);
         }
       }
 
-      // Add this function to load statistics
       async function loadStatistics() {
         try {
           const response = await fetch("statistic.php");
@@ -165,8 +161,8 @@
       }
 
       document.addEventListener("DOMContentLoaded", function () {
-        fetchUsername(); // Fetch username when page loads
-        loadStatistics(); // Load initial statistics
+        fetchUsername();
+        loadStatistics();
         fetchGroup();
         console.log("Initializing QR scanner...");
         const html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", {
@@ -178,7 +174,6 @@
         loadAttendanceRecords(currentLimit);
       });
 
-      // Reload statistics every 5 minutes
       setInterval(loadStatistics, 300000);
 
       function onScanSuccess(decodedText, decodedResult) {
@@ -188,13 +183,12 @@
 
       function onScanFailure(error) {
         console.warn(`QR scan failed: ${error}`);
-        // Only show error if it's a persistent issue
         if (
           error &&
           error.message &&
           error.message.includes("No QR code found")
         ) {
-          return; // Don't show this common error
+          return;
         }
         document.getElementById(
           "qr-reader-results"
@@ -223,7 +217,6 @@
 
           if (data.success) {
             resultsDiv.innerHTML = `<div style="color: green">${data.message}</div>`;
-            // Refresh attendance details after successful submission
             setTimeout(() => {
               window.location.reload();
             }, 2000);
@@ -247,7 +240,7 @@
 
           if (data.success) {
             const tbody = document.getElementById("attendanceRecords");
-            tbody.innerHTML = ""; // Clear existing records
+            tbody.innerHTML = "";
 
             data.records.forEach((record) => {
               const row = document.createElement("tr");
@@ -256,10 +249,8 @@
               if (record.attendance_status === "present") {
                 statusCellContent = "Present";
               } else {
-                // Absent
                 statusCellContent = "Absent";
                 if (record.justification_status === null) {
-                  // Create a link/button to the justification page
                   statusCellContent += ` <a href="justify_submission.html?record_id=${record.record_id}" class="justify-button">Justify</a>`;
                 } else if (record.justification_status === "pending") {
                   statusCellContent += " (Justification Pending)";
@@ -269,8 +260,6 @@
                 } else if (record.justification_status === "rejected") {
                   statusCellContent +=
                     ' <span style="color: red;">(Justification Rejected)</span>';
-                  // Optionally add a re-justify button here if logic allows
-                  // statusCellContent += ` <a href="justify_submission.html?record_id=${record.record_id}" class="justify-button">Re-Justify</a>`;
                 }
               }
 

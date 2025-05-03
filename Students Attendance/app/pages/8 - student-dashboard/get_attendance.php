@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $student_id = $_SESSION['user_id'];
-$limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 5; // Default to 5 records
+$limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 5;
 
 $query = "SELECT 
 a.record_id,
@@ -32,12 +32,12 @@ $result = $stmt->get_result();
 $records = [];
 while ($row = $result->fetch_assoc()) {
     $records[] = [
-       'record_id' => $row['record_id'],
+        'record_id' => $row['record_id'],
         'date' => $row['date'],
         'time' => $row['start_time'],
-       'status' => $row['attendance_status'],
-       'attendance_status' => $row['attendance_status'],
-       'justification_status' => $row['justification_status']
+        'status' => $row['attendance_status'],
+        'attendance_status' => $row['attendance_status'],
+        'justification_status' => $row['justification_status']
     ];
 }
 

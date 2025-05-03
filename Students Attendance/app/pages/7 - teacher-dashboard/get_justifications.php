@@ -133,4 +133,3 @@ ob_end_flush();
 exit(); // Explicitly exit
 
 ?>
-// --- END OF FILE get_justifications.php ---

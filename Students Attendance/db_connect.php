@@ -9,6 +9,5 @@ if ($conn->connect_error) {
     ]));
 }
 
-// Set charset to ensure proper handling of special characters
 $conn->set_charset("utf8mb4");
 ?>

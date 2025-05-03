@@ -8,7 +8,6 @@ header('Content-Type: application/json');
 require_once '../../../db_connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Return current group
     if (isset($_SESSION['user_id'])) {
         $user_id = $_SESSION['user_id'];
         try {
@@ -21,12 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 throw new Exception("Execute failed: " . $stmt->error);
             }
             $result = $stmt->get_result();
-        
-        if ($row = $result->fetch_assoc()) {
-            echo json_encode(['success' => true, 'group' => $row['group']]);
-        } else {
-            echo json_encode(['success' => false, 'error' => 'Student not found or invalid user type']);
-        }
+
+            if ($row = $result->fetch_assoc()) {
+                echo json_encode(['success' => true, 'group' => $row['group']]);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Student not found or invalid user type']);
+            }
         } catch (Exception $e) {
             http_response_code(500);
             echo json_encode(['success' => false, 'error' => $e->getMessage()]);

@@ -1,4 +1,12 @@
-Certainly! Here are the SQL `CREATE TABLE` statements again for the database schema we discussed, along with explanations for each table and its columns.
+Okay, here are the SQL `CREATE TABLE` statements for the tables shown in your image: `AttendanceSessions`, `Messages`, `QRCodes`, `StudentAttendanceRecords`, `TeacherAnnouncements`, and `Users`. Explanations for each table and column are included.
+
+**Important Notes Before You Start:**
+
+*   **Password Security:** The `Users` table below includes a `password` column storing plain text. **This is extremely insecure and should NEVER be done in a real application.** Always hash passwords using a strong algorithm (like bcrypt or Argon2) before storing them. This example uses plain text only for simplicity based on the likely initial setup implied.
+*   **Foreign Keys:** Foreign key constraints (`FOREIGN KEY ... REFERENCES ...`) are included. These enforce data integrity (e.g., ensuring a `teacher_id` in `AttendanceSessions` actually exists in the `Users` table). While technically optional to *create* the tables, they are highly recommended for a robust database.
+*   **Database System:** SQL syntax can have minor variations between database systems (MySQL, PostgreSQL, SQL Server, SQLite). These scripts use common syntax likely compatible with MySQL/MariaDB.
+
+---
 
 **1. Users Table**
 
@@ -7,191 +15,151 @@ CREATE TABLE Users (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL, -- Storing password in plain text (for simplicity, NOT recommended for production)
+    password VARCHAR(255) NOT NULL, -- WARNING: Storing plain text passwords is very insecure! Hash passwords in production.
     role ENUM('teacher', 'student') NOT NULL,
-   `group` INT NULL -- Group number for students, group taught for teachers (one group only)
+    `group` INT NULL -- Assign student to a group, or teacher to the group they teach. NULL if not applicable.
 );
 ```
 
 **Explanation:**
 
-*   `user_id`:  Unique identifier for each user, automatically incrementing integer, and the primary key.
-*   `name`:  User's name (e.g., "Alice Smith", "John Doe").
-*   `email`:  User's email address, must be unique across all users and cannot be empty.
-*   `password`: User's password (stored in plain text for simplicity in this example - **never do this in a real application**).  **Important: In a real-world application, you should NEVER store passwords in plain text. Use proper hashing techniques like bcrypt, Argon2, or similar.**
-*   `role`:  Indicates whether the user is a 'teacher' or a 'student'.  Using `ENUM` restricts the possible values to these two options, ensuring data consistency.
-*   `group`: An integer (`INT`) representing group affiliation. For students, this field stores their assigned group number. For teachers, it stores the number of the single group they are responsible for teaching. Each teacher is constrained to teaching only one group. If a user is not assigned to a group, this field can be `NULL`.
+*   `user_id`: Unique identifier for each user (student or teacher). Automatically generated integer and the primary key.
+*   `name`: The full name of the user. Cannot be empty.
+*   `email`: The user's email address. Must be unique for each user and cannot be empty. Often used for login.
+*   `password`: The user's password. **(Security Warning)** Stored as plain text here for simplicity only. Should be securely hashed in a real system. Cannot be empty.
+*   `role`: Defines if the user is a 'teacher' or a 'student'. Restricts values to only these two options. Cannot be empty.
+*   `group`: An integer representing the group number. For students, it's their assigned group. For teachers, it might be the group they primarily teach (assuming one teacher per group for simplicity). Can be `NULL` if a user isn't assigned to a specific group.
 
-**2. Attendance Sessions Table**
+---
+
+**2. AttendanceSessions Table**
 
 ```sql
 CREATE TABLE AttendanceSessions (
     session_id INT PRIMARY KEY AUTO_INCREMENT,
-    teacher_id INT NOT NULL, -- Foreign key to Users table for the teacher
-    date DATE NOT NULL,
-    start_time TIME NOT NULL,
-    end_time TIME NOT NULL,
-    status ENUM('open', 'closed') DEFAULT 'open', -- Status of the attendance session
-    FOREIGN KEY (teacher_id) REFERENCES Users(user_id) -- Optional Foreign Key constraint for data integrity
+    teacher_id INT NOT NULL,          -- Foreign key linking to the teacher who created the session
+    date DATE NOT NULL,               -- The date the session is for
+    start_time TIME NOT NULL,         -- The time the session starts
+    end_time TIME NOT NULL,           -- The time the session ends
+    status ENUM('open', 'closed') DEFAULT 'open', -- Status of the session (e.g., accepting attendance or not)
+    FOREIGN KEY (teacher_id) REFERENCES Users(user_id) ON DELETE CASCADE ON UPDATE CASCADE -- Link to Users table
 );
 ```
 
 **Explanation:**
 
-*   `session_id`: Unique identifier for each attendance session, automatically incrementing integer, and the primary key.
-*   `teacher_id`:  Foreign key referencing the `user_id` in the `Users` table. This links each attendance session to the teacher who opened it.  `NOT NULL` means a session must be associated with a teacher.
-*   `date`: Date for which the attendance session is opened.  Data type `DATE` stores only the date part (year, month, day).
-*   `start_time`: Start time of the attendance session. Data type `TIME` stores only the time part (hour, minute, second).
-*   `end_time`: End time of the attendance session.
-*   `status`:  Indicates the current status of the attendance session. `ENUM('open', 'closed')` restricts the values to 'open' or 'closed'. `DEFAULT 'open'` sets the default status to 'open' when a new session is created.
-*   `FOREIGN KEY (teacher_id) REFERENCES Users(user_id)`: **Optional Foreign Key constraint.** This enforces referential integrity, ensuring that the `teacher_id` in this table must correspond to a valid `user_id` in the `Users` table.  While optional for a *minimal* setup, it's highly recommended in real systems to prevent orphaned records and maintain data consistency.
-
-**3. Student Attendance Records Table**
-
-```sql
-CREATE TABLE StudentAttendanceRecords (
-    record_id INT PRIMARY KEY AUTO_INCREMENT,
-    session_id INT NOT NULL, -- Foreign key to AttendanceSessions table
-    student_id INT NOT NULL, -- Foreign key to Users table for the student
-    attendance_status ENUM('present', 'absent') NOT NULL,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, -- When the record was created
-    UNIQUE KEY unique_student_session (session_id, student_id), -- Ensure a student can only have one record per session
-    FOREIGN KEY (session_id) REFERENCES AttendanceSessions(session_id), -- Optional Foreign Key constraint for data integrity
-    FOREIGN KEY (student_id) REFERENCES Users(user_id) -- Optional Foreign Key constraint for data integrity
-);
-```
-
-**Explanation:**
-
-*   `record_id`: Unique identifier for each attendance record, automatically incrementing integer, and the primary key.
-*   `session_id`: Foreign key referencing `session_id` from the `AttendanceSessions` table. Links the attendance record to a specific attendance session. `NOT NULL` means every record must be associated with a session.
-*   `student_id`: Foreign key referencing `user_id` from the `Users` table.  Links the attendance record to a specific student. `NOT NULL` means every record must be associated with a student.
-*   `attendance_status`:  The attendance status marked by the student. `ENUM('present', 'absent')` restricts values to 'present' or 'absent'.  `NOT NULL` means a status must be recorded.
-*   `timestamp`:  Timestamp indicating when the attendance record was created. `DATETIME` stores both date and time. `DEFAULT CURRENT_TIMESTAMP` automatically sets the timestamp to the current date and time when a new record is inserted.
-*   `UNIQUE KEY unique_student_session (session_id, student_id)`:  **Unique constraint**.  Ensures that for each `session_id`, a `student_id` can appear only once. This prevents duplicate attendance records for the same student in the same session.
-*   `FOREIGN KEY (session_id) REFERENCES AttendanceSessions(session_id)` and `FOREIGN KEY (student_id) REFERENCES Users(user_id)`: **Optional Foreign Key constraints.**  These enforce referential integrity, ensuring that `session_id` and `student_id` values are valid references to the respective tables.  Recommended for data consistency.
-
-**4. Messages Table**
-
-```sql
-CREATE TABLE Messages (
-    message_id INT PRIMARY KEY AUTO_INCREMENT,
-    sender_id INT NOT NULL, -- Foreign key to Users table for the sender
-    receiver_id INT NOT NULL, -- Foreign key to Users table for the receiver
-    message_content TEXT NOT NULL,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (sender_id) REFERENCES Users(user_id), -- Optional Foreign Key constraint for data integrity
-    FOREIGN KEY (receiver_id) REFERENCES Users(user_id)  -- Optional Foreign Key constraint for data integrity
-);
-```
-
-**Explanation:**
-
-*   `message_id`: Unique identifier for each message, automatically incrementing integer, and the primary key.
-*   `sender_id`: Foreign key referencing `user_id` from the `Users` table.  Indicates who sent the message. `NOT NULL` means every message must have a sender.
-*   `receiver_id`: Foreign key referencing `user_id` from the `Users` table. Indicates who received the message. `NOT NULL` means every message must have a receiver.
-*   `message_content`: The actual text content of the message. `TEXT` data type is suitable for storing longer text messages. `NOT NULL` means the message content cannot be empty.
-*   `timestamp`: Timestamp indicating when the message was sent. `DATETIME DEFAULT CURRENT_TIMESTAMP` sets the timestamp automatically.
-*   `FOREIGN KEY (sender_id) REFERENCES Users(user_id)` and `FOREIGN KEY (receiver_id) REFERENCES Users(user_id)`: **Optional Foreign Key constraints.**  Ensure that `sender_id` and `receiver_id` are valid `user_id` values from the `Users` table. Recommended for data integrity.
-
-**Important Reminders:**
-
-*   **Plain Text Passwords (Security Risk):**  The `password` column in the `Users` table stores passwords in plain text. **This is a major security vulnerability and is absolutely NOT recommended for any real-world application.**  You must use password hashing.
-*   **Minimal Design:** This SQL schema is designed to be minimal and support the core features we discussed.  For a more comprehensive system, you might need additional tables or columns to store more information (e.g., student courses, teacher classes, more user profile details, etc.).
-*   **Foreign Keys (Data Integrity):**  The `FOREIGN KEY` constraints are marked as "optional" for the sake of a very basic example. However, in almost all real database applications, you should use foreign keys to enforce relationships between tables and maintain data integrity.
-
-Remember to choose a database system (like MySQL, PostgreSQL, SQLite, etc.) and use these `CREATE TABLE` statements to set up your database structure. Let me know if you have any more questions!
-
-
-
+*   `session_id`: Unique identifier for each attendance session. Automatically generated integer and the primary key.
+*   `teacher_id`: Links to the `user_id` of the teacher who initiated this session. Cannot be empty.
+*   `date`: The specific date for which this attendance session is valid. Cannot be empty.
+*   `start_time`: The time the attendance session begins. Cannot be empty.
+*   `end_time`: The time the attendance session ends. Cannot be empty.
+*   `status`: Indicates whether the session is currently 'open' (accepting attendance) or 'closed'. Defaults to 'open' when a new session is created.
+*   `FOREIGN KEY (teacher_id) ...`: Ensures that the `teacher_id` must exist in the `Users` table. `ON DELETE CASCADE` means if a teacher user is deleted, their sessions are also deleted. `ON UPDATE CASCADE` means if a teacher's `user_id` changes (unlikely but possible), it's updated here too.
 
 ---
 
-
-Okay, let's create the SQL table for QR Codes as you described.
-
-**Table Name:** `QRCodes`
-
-**Table Schema:**
+**3. QRCodes Table**
 
 ```sql
 CREATE TABLE QRCodes (
     qr_code_id INT PRIMARY KEY AUTO_INCREMENT,
-    session_id INT UNIQUE NOT NULL, -- Foreign key to AttendanceSessions table, ensuring one QR code per session
-    code_value VARCHAR(8) UNIQUE NOT NULL, -- The 8-letter random code, must be unique
-    is_used BOOLEAN DEFAULT FALSE, -- Flag to indicate if the code has been used (initially false)
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp when the code was generated
-    updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Timestamp when the code was last updated (on use/regeneration)
-    FOREIGN KEY (session_id) REFERENCES AttendanceSessions(session_id) -- Foreign Key constraint
-);
-```
-
-**Explanation of Columns:**
-
-*   **`qr_code_id INT PRIMARY KEY AUTO_INCREMENT`**:
-    *   `qr_code_id`:  Unique identifier for each QR code record.
-    *   `INT`: Integer data type.
-    *   `PRIMARY KEY`:  Designates this column as the primary key, ensuring uniqueness and allowing for efficient indexing.
-    *   `AUTO_INCREMENT`:  Automatically generates a unique, incrementing integer value for each new QR code record inserted.
-
-*   **`session_id INT UNIQUE NOT NULL`**:
-    *   `session_id`: Foreign key linking this QR code to a specific attendance session.
-    *   `INT`: Integer data type, referencing the `session_id` from the `AttendanceSessions` table.
-    *   `UNIQUE`:  Ensures that there is only one QR code associated with each `session_id`. This enforces a one-to-one relationship between `AttendanceSessions` and `QRCodes`.
-    *   `NOT NULL`:  Every QR code must be associated with an attendance session.
-
-*   **`code_value VARCHAR(8) UNIQUE NOT NULL`**:
-    *   `code_value`: Stores the 8-letter random code itself.
-    *   `VARCHAR(8)`:  String data type of variable length, with a maximum length of 8 characters. This will hold your 8-letter random code.
-    *   `UNIQUE`:  Ensures that each generated code is unique across all QR code records to prevent code collisions.
-    *   `NOT NULL`:  The code value must always be present.
-
-*   **`is_used BOOLEAN DEFAULT FALSE`**:
-    *   `is_used`:  A flag to track if the QR code has been used for attendance.
-    *   `BOOLEAN`:  Boolean data type (can be `TRUE` or `FALSE`, or 1 or 0 depending on the specific database system).
-    *   `DEFAULT FALSE`:  When a new QR code is generated, it's initially set to `FALSE` because it hasn't been used yet.  You would update this to `TRUE` when a student successfully uses the code for attendance (or you might regenerate the code instead, as per your requirement).
-
-*   **`created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP`**:
-    *   `created_at`:  Timestamp indicating when the QR code record was created (i.e., when the code was initially generated).
-    *   `TIMESTAMP`:  Data type for storing date and time.
-    *   `DEFAULT CURRENT_TIMESTAMP`:  Automatically sets the `created_at` column to the current date and time when a new QR code record is inserted.
-
-*   **`updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`**:
-    *   `updated_at`: Timestamp indicating when the QR code record was last updated. This will be useful to track when a code was regenerated after being used.
-    *   `TIMESTAMP`: Data type for storing date and time.
-    *   `ON UPDATE CURRENT_TIMESTAMP`:  Automatically updates the `updated_at` column to the current date and time whenever the row is updated (for example, when you regenerate the `code_value` after it's used).
-
-*   **`FOREIGN KEY (session_id) REFERENCES AttendanceSessions(session_id)`**:
-    *   `FOREIGN KEY (session_id)`:  Defines `session_id` as a foreign key in the `QRCodes` table.
-    *   `REFERENCES AttendanceSessions(session_id)`:  Specifies that this foreign key references the `session_id` column in the `AttendanceSessions` table.
-    *   This enforces referential integrity, ensuring that every `session_id` in `QRCodes` must correspond to a valid `session_id` in `AttendanceSessions`.
-
-**How to use this `CREATE TABLE` statement:**
-
-1.  Connect to your SQL database (where you have the other tables: `Users`, `AttendanceSessions`, `StudentAttendanceRecords`, `Messages`).
-2.  Open a new query window or editor.
-3.  Copy and paste this `CREATE TABLE QRCodes ...` statement into the query window.
-4.  Execute the query.
-
-After executing this statement, you will have a new table named `QRCodes` in your database with the structure defined above. You can then proceed to implement the logic for generating random 8-letter codes, associating them with attendance sessions, and handling the code scanning and attendance marking process.
-
-**5. Teacher Announcements Table**
-
-```sql
-CREATE TABLE TeacherAnnouncements (
-    announcement_id INT PRIMARY KEY AUTO_INCREMENT,
-    teacher_id INT NOT NULL,
-    content TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (teacher_id) REFERENCES Users(user_id)
+    session_id INT UNIQUE NOT NULL,   -- Foreign key linking to the specific session (ensures one QR per session)
+    code_value VARCHAR(255) UNIQUE NOT NULL, -- The unique value/string embedded in the QR code (e.g., a random token)
+    is_used BOOLEAN DEFAULT FALSE,     -- Flag to indicate if the code has been successfully used (might not be needed if regenerated)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp when the QR code record was created
+    FOREIGN KEY (session_id) REFERENCES AttendanceSessions(session_id) ON DELETE CASCADE ON UPDATE CASCADE -- Link to AttendanceSessions table
 );
 ```
 
 **Explanation:**
 
-*   `announcement_id`: Unique identifier for each announcement
-*   `teacher_id`: Foreign key linking to the teacher who made the announcement
-*   `content`: The actual announcement text
-*   `created_at`: When the announcement was first made
-*   `updated_at`: When the announcement was last updated
-*   Foreign key ensures only valid teachers can make announcements
+*   `qr_code_id`: Unique identifier for the QR code record. Automatically generated integer and the primary key.
+*   `session_id`: Links to the `session_id` this QR code is associated with. `UNIQUE` constraint ensures only one QR code record exists per session. Cannot be empty.
+*   `code_value`: The actual data stored within the QR code (e.g., a unique random string or token). Must be unique across all QR codes and cannot be empty. `VARCHAR(255)` allows flexibility in code length.
+*   `is_used`: A boolean flag (`TRUE`/`FALSE` or `1`/`0`) indicating if this specific code instance has been scanned/processed. Defaults to `FALSE`. Your application logic might regenerate the `code_value` instead of using this flag.
+*   `created_at`: Records the date and time when this QR code entry was created. Defaults to the time of insertion.
+*   `FOREIGN KEY (session_id) ...`: Ensures that the `session_id` must exist in the `AttendanceSessions` table. Cascading rules apply similarly to the previous table.
+
+---
+
+**4. StudentAttendanceRecords Table**
+
+```sql
+CREATE TABLE StudentAttendanceRecords (
+    record_id INT PRIMARY KEY AUTO_INCREMENT,
+    session_id INT NOT NULL,          -- Foreign key linking to the session
+    student_id INT NOT NULL,          -- Foreign key linking to the student
+    attendance_status ENUM('present', 'absent', 'late', 'excused') NOT NULL, -- Status of the student for this session
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, -- When the record was created or last updated
+    notes TEXT NULL,                  -- Optional notes (e.g., reason for absence/lateness)
+    UNIQUE KEY unique_student_session (session_id, student_id), -- Prevent duplicate records for the same student in the same session
+    FOREIGN KEY (session_id) REFERENCES AttendanceSessions(session_id) ON DELETE CASCADE ON UPDATE CASCADE, -- Link to AttendanceSessions
+    FOREIGN KEY (student_id) REFERENCES Users(user_id) ON DELETE CASCADE ON UPDATE CASCADE -- Link to Users (students)
+);
+```
+
+**Explanation:**
+
+*   `record_id`: Unique identifier for each individual attendance entry. Automatically generated integer and the primary key.
+*   `session_id`: Links to the specific `session_id` this record belongs to. Cannot be empty.
+*   `student_id`: Links to the `user_id` of the student whose attendance is being recorded. Cannot be empty.
+*   `attendance_status`: The recorded status for the student in this session (e.g., 'present', 'absent'). Added 'late' and 'excused' as common possibilities. Cannot be empty.
+*   `timestamp`: Records when this attendance record was created or last modified. Defaults to the current date and time.
+*   `notes`: An optional field to add any relevant notes about this specific attendance record (e.g., reason for absence). Can be `NULL`.
+*   `UNIQUE KEY unique_student_session ...`: This crucial constraint prevents inserting more than one attendance record for the same student within the same session.
+*   `FOREIGN KEY (session_id) ...` and `FOREIGN KEY (student_id) ...`: Ensure `session_id` and `student_id` exist in their respective tables. Cascading rules apply.
+
+---
+
+**5. Messages Table**
+
+```sql
+CREATE TABLE Messages (
+    message_id INT PRIMARY KEY AUTO_INCREMENT,
+    sender_id INT NOT NULL,           -- Foreign key linking to the user who sent the message
+    receiver_id INT NOT NULL,         -- Foreign key linking to the user who received the message
+    message_content TEXT NOT NULL,    -- The actual content of the message
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, -- When the message was sent
+    is_read BOOLEAN DEFAULT FALSE,     -- Flag to indicate if the receiver has read the message
+    FOREIGN KEY (sender_id) REFERENCES Users(user_id) ON DELETE CASCADE ON UPDATE CASCADE, -- Link to Users (sender)
+    FOREIGN KEY (receiver_id) REFERENCES Users(user_id) ON DELETE CASCADE ON UPDATE CASCADE -- Link to Users (receiver)
+);
+```
+
+**Explanation:**
+
+*   `message_id`: Unique identifier for each message. Automatically generated integer and the primary key.
+*   `sender_id`: Links to the `user_id` of the user who sent the message. Cannot be empty.
+*   `receiver_id`: Links to the `user_id` of the user who is the intended recipient. Cannot be empty.
+*   `message_content`: The text of the message itself. `TEXT` allows for longer messages. Cannot be empty.
+*   `timestamp`: Records when the message was sent. Defaults to the current date and time.
+*   `is_read`: A boolean flag indicating whether the recipient has marked the message as read. Defaults to `FALSE`.
+*   `FOREIGN KEY (sender_id) ...` and `FOREIGN KEY (receiver_id) ...`: Ensure sender and receiver IDs exist in the `Users` table. Cascading rules apply.
+
+---
+
+**6. TeacherAnnouncements Table**
+
+```sql
+CREATE TABLE TeacherAnnouncements (
+    announcement_id INT PRIMARY KEY AUTO_INCREMENT,
+    teacher_id INT NOT NULL,          -- Foreign key linking to the teacher who made the announcement
+    content TEXT NOT NULL,            -- The content of the announcement
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp when the announcement was posted
+    -- updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Optional: uncomment if announcements can be edited
+    FOREIGN KEY (teacher_id) REFERENCES Users(user_id) ON DELETE CASCADE ON UPDATE CASCADE -- Link to Users (teacher)
+);
+```
+
+**Explanation:**
+
+*   `announcement_id`: Unique identifier for each announcement. Automatically generated integer and the primary key.
+*   `teacher_id`: Links to the `user_id` of the teacher who posted the announcement. Cannot be empty. (Application logic should ensure this user has the 'teacher' role).
+*   `content`: The text content of the announcement. Cannot be empty.
+*   `created_at`: Records when the announcement was initially posted. Defaults to the current timestamp.
+*   `updated_at`: (Optional, currently commented out) If announcements can be edited, this timestamp would automatically update whenever the announcement record is modified.
+*   `FOREIGN KEY (teacher_id) ...`: Ensures the `teacher_id` exists in the `Users` table. Cascading rules apply.
+
+---
+
+Execute these `CREATE TABLE` statements in your SQL client connected to the `pfe_std_att` database. Remember the password security warning for the `Users` table!

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit Justification</title>
-    <link rel="stylesheet" href="../7 - teacher-dashboard/teacher-dashboard.css"> <!-- Reuse styles -->
+    <link rel="stylesheet" href="../7 - teacher-dashboard/teacher-dashboard.css">
     <style>
         body {
             display: flex;
@@ -89,8 +89,6 @@
     </div>
 
     <script>
-        // Theme sync (optional, copy from chat panel if needed)
-        // ...
 
         const absenceDetailsDiv = document.getElementById('absence-details');
         const justificationForm = document.getElementById('justification-form');
@@ -98,7 +96,6 @@
         const justificationTextInput = document.getElementById('justification_text');
         const statusMessageDiv = document.getElementById('status-message');
 
-        // Get record_id from URL
         const urlParams = new URLSearchParams(window.location.search);
         const recordId = urlParams.get('record_id');
 
@@ -106,44 +103,40 @@
                 async function fetchAbsenceDetails(id) {
              if (!id) {
                  absenceDetailsDiv.innerHTML = '<p style="color: red;">Error: Missing record ID.</p>';
-                 justificationForm.style.display = 'none'; // Hide form if no ID
+                 justificationForm.style.display = 'none';
                  return;
              }
             recordIdInput.value = id;
-            console.log("Fetching details for record_id:", id); // Log ID
+            console.log("Fetching details for record_id:", id);
 
             try {
                 const response = await fetch(`get_single_attendance.php?record_id=${id}`);
-                console.log("Fetch response status:", response.status); // Log status
+                console.log("Fetch response status:", response.status);
 
-                const responseText = await response.text(); // Get raw text first
-                console.log("Raw response text:", responseText); // <<< LOG RAW TEXT
+                const responseText = await response.text();
+                console.log("Raw response text:", responseText);
 
                 if (!response.ok) {
-                    // Try to parse error from text if possible, otherwise use status
                     let errorMsg = `HTTP error! status: ${response.status}`;
                     try {
                         const errorData = JSON.parse(responseText);
                         if (errorData && errorData.error) errorMsg = errorData.error;
-                    } catch (e) {} // Ignore JSON parse error here
+                    } catch (e) {}
                     throw new Error(errorMsg);
                 }
 
-                // Try to parse JSON
                 let data;
                 try {
-                    data = JSON.parse(responseText); // Try parsing the stored text
-                    console.log("Parsed JSON data:", data); // Log parsed data
+                    data = JSON.parse(responseText);
+                    console.log("Parsed JSON data:", data);
                 } catch (jsonError) {
                     console.error("JSON Parsing Error:", jsonError);
-                    throw new Error(`Failed to parse server response. Server sent: ${responseText}`); // Include raw text in error
+                    throw new Error(`Failed to parse server response. Server sent: ${responseText}`);
                 }
 
-                // --- Rest of your logic using 'data' ---
                 if (data.success && data.record) {
-                    console.log("Data success. Record:", data.record); // Log the record object
+                    console.log("Data success. Record:", data.record);
                     const record = data.record;
-                    // --- Existing display logic ---
                     absenceDetailsDiv.innerHTML = `
                         <p><strong>Date:</strong> ${record.date || 'N/A'}</p>
                         <p><strong>Time:</strong> ${record.start_time || 'N/A'} - ${record.end_time || 'N/A'}</p>
@@ -152,22 +145,19 @@
                         ${record.justification ? `<p><strong>Previous Justification:</strong> ${record.justification}</p>` : ''}
                     `;
 
-                    // Optionally hide form if already justified or not absent
                     if (record.attendance_status !== 'absent' || record.justification_status !== null) {
                         justificationForm.style.display = 'none';
                          absenceDetailsDiv.innerHTML += '<p style="color: orange;">Justification cannot be submitted for this record (not absent or already processed).</p>';
                     } else {
                         justificationForm.style.display = 'block';
                     }
-                    // --- End of existing display logic ---
                 } else {
-                     console.error("Server responded success=false or missing record:", data); // Log failure case
+                     console.error("Server responded success=false or missing record:", data);
                      throw new Error(data.error || 'Record not found or invalid.');
                 }
-                // --- End of rest of your logic ---
 
             } catch (error) {
-                 console.error('Error in fetchAbsenceDetails:', error); // Log the caught error
+                 console.error('Error in fetchAbsenceDetails:', error);
                  absenceDetailsDiv.innerHTML = `<p style="color: red;">Error loading details: ${error.message}</p>`;
                  justificationForm.style.display = 'none';
             }
@@ -199,11 +189,9 @@
                     body: formData
                 });
 
-                // Get the raw response text first
                 const responseText = await response.text();
-                console.log('Raw server response:', responseText); // For debugging
+                console.log('Raw server response:', responseText);
 
-                // Try to parse the response as JSON
                 let data;
                 try {
                     data = JSON.parse(responseText);
@@ -231,14 +219,11 @@
             }
         });
 
-        // Fetch details when the page loads
         fetchAbsenceDetails(recordId);
 
-         // Initialize theme from localStorage (if implementing theme toggle)
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
-            // You might need to copy the full theme toggle logic if needed
         });
 
     </script>

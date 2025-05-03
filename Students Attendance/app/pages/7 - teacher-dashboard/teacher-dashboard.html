@@ -1,259 +1,273 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teacher Dashboard - Attendance</title>
+    <link rel="stylesheet" href="teacher-dashboard.css" />
+  </head>
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Teacher Dashboard - Attendance</title>
-        <link rel="stylesheet" href="teacher-dashboard.css">
-    </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="sidebar-header">Teacher Dashboard</div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>
+              <button class="theme-toggle" onclick="toggleTheme()">
+                <span id="theme-icon">🌞</span>
+                <span id="theme-text">Dark Mode</span>
+              </button>
+            </li>
+            <li><a href="../10 - Qr Genration/qr.html">QR Code</a></li>
+            <li>
+              <a href="review_justifications.php">Review Justifications</a>
+            </li>
+            <li>
+              <a href="../6 - anouncement/anouncement.php">Announcement</a>
+            </li>
+            <li><a href="../0 - landing/index.html">Logout</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <main class="main-content">
+        <header class="main-header">
+          <h1>Statistics</h1>
+          <div class="user-info">
+            <span class="username" id="welcomeUsername">Loading...</span>
+            <span class="role">Teacher</span>
+            <div class="profile-icon" id="profileIcon">-</div>
+          </div>
+        </header>
 
-    <body>
-        <div class="dashboard-container">
-            <aside class="sidebar">
-                <div class="sidebar-header">Teacher Dashboard</div>
-                <nav class="sidebar-nav">
-                    <ul>
-                        <li><button class="theme-toggle" onclick="toggleTheme()">
-                            <span id="theme-icon">🌞</span>
-                            <span id="theme-text">Dark Mode</span>
-                        </button></li>
-                        <li><a href="../10 - Qr Genration/qr.html">QR Code</a></li>
-                         <li><a href="review_justifications.php">Review Justifications</a></li>
-                        <li><a href="../6 - anouncement/anouncement.php">Announcement</a></li>
-                        <li><a href="../0 - landing/index.html">Logout</a></li>
-                    </ul>
-                </nav>
-            </aside>
-            <main class="main-content">
-                <header class="main-header">
-                    <h1>Statistics</h1>
-                    <div class="user-info">
-                        <span class="username" id="welcomeUsername">Loading...</span> <span class="role">Teacher</span>
-                        <div class="profile-icon" id="profileIcon">-</div>
-                    </div>
-                </header>
+        <section class="outsec-wrapper">
+          <section class="statistics-section sec1">
+            <div class="stats-card week-stats">
+              <h3>Attendance per week</h3>
+              <div class="progress-circle" id="week-progress">0%</div>
+              <p>Last 7 Days</p>
+            </div>
+            <div class="stats-card month-stats">
+              <h3>Attendance per month</h3>
+              <div class="progress-circle" id="month-progress">0%</div>
+              <p>Last 30 Days</p>
+            </div>
+            <div class="stats-card semester-stats">
+              <h3>Attendance per semester</h3>
+              <div class="progress-circle" id="semester-progress">0%</div>
+              <p>Last 6 Month</p>
+            </div>
+          </section>
+          <section class="open-attendance-section sec2">
+            <h2>Open Attendance</h2>
+            <form id="attendance-form">
+              <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required />
+              </div>
+              <div class="form-group">
+                <label for="start-time">Start Time:</label>
+                <input type="time" id="start-time" name="start_time" required />
+              </div>
+              <div class="form-group">
+                <label for="end-time">End Time:</label>
+                <input type="time" id="end-time" name="end_time" required />
+              </div>
+              <button type="submit" class="open-attendance-button">
+                Open Attendance
+              </button>
+            </form>
+            <div id="session-status"></div>
+          </section>
+        </section>
 
-                <section class="outsec-wrapper">
+        <section class="make_announcement">
+          <textarea
+            id="announcement-text"
+            placeholder="Write your announcement here..."
+          ></textarea>
+          <button id="post-announcement">Post Announcement</button>
+          <div id="announcement-status"></div>
+        </section>
 
+        <section class="students-section">
+          <h2>Students</h2>
+          <div id="loading-status"></div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Status (Today)</th>
+                <th>Total Present</th>
+                <th>Total Absent</th>
+                <th>Final Score</th>
+              </tr>
+            </thead>
+            <tbody id="students-table-body">
+              <tr>
+                <td colspan="6">Loading...</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
 
-                    <section class="statistics-section sec1">
-                        <div class="stats-card week-stats">
-                            <h3>Attendance per week</h3>
-                            <div class="progress-circle" id="week-progress">0%</div>
-                            <p>Last 7 Days</p>
-                        </div>
-                        <div class="stats-card month-stats">
-                            <h3>Attendance per month</h3>
-                            <div class="progress-circle" id="month-progress">0%</div>
-                            <p>Last 30 Days</p>
-                        </div>
-                        <div class="stats-card semester-stats">
-                            <h3>Attendance per semester</h3>
-                            <div class="progress-circle" id="semester-progress">0%</div>
-                            <p>Last 6 Month</p>
-                        </div>
-                    </section>
-                    <section class="open-attendance-section sec2">
-                        <h2>Open Attendance</h2>
-                        <form id="attendance-form">
-                            <div class="form-group">
-                                <label for="date">Date:</label>
-                                <input type="date" id="date" name="date" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="start-time">Start Time:</label>
-                                <input type="time" id="start-time" name="start_time" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="end-time">End Time:</label>
-                                <input type="time" id="end-time" name="end_time" required>
-                            </div>
-                            <button type="submit" class="open-attendance-button">Open Attendance</button>
-                        </form>
-                        <div id="session-status"></div>
-                    </section>
-                </section>
+        <iframe
+          class="chat-section"
+          src="../9 - chat-panel/chat-panel.html"
+          frameborder="0"
+        ></iframe>
+      </main>
+    </div>
+    <script>
+      function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute("data-theme");
+        const newTheme = currentTheme === "light" ? "dark" : "light";
 
-                <section class="make_announcement">
-                    <textarea id="announcement-text" placeholder="Write your announcement here..."></textarea>
-                    <button id="post-announcement">Post Announcement</button>
-                    <div id="announcement-status"></div>
-                </section>
+        html.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
 
+        document.getElementById("theme-icon").textContent =
+          newTheme === "light" ? "🌞" : "🌙";
+        document.getElementById("theme-text").textContent =
+          newTheme === "light" ? "Dark Mode" : "Light Mode";
 
+        const chatFrame = document.querySelector(".chat-section");
+        chatFrame.contentWindow.postMessage(
+          { type: "themeChange", theme: newTheme },
+          "*"
+        );
+      }
 
-                <section class="students-section">
-                    <h2>Students</h2>
-                    <div id="loading-status"></div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Status (Today)</th>
-                                <th>Total Present</th>
-                                <th>Total Absent</th>
-                                <th>Final Score</th>
-                            </tr>
-                        </thead>
-                        <tbody id="students-table-body">
-                            <tr>
-                                <td colspan="6">Loading...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
+      document.addEventListener("DOMContentLoaded", () => {
+        const savedTheme = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+        document.getElementById("theme-icon").textContent =
+          savedTheme === "light" ? "🌞" : "🌙";
+        document.getElementById("theme-text").textContent =
+          savedTheme === "light" ? "Dark Mode" : "Light Mode";
 
-                <iframe class="chat-section" src="../9 - chat-panel/chat-panel.html" frameborder="0"></iframe>
-            </main>
-        </div>
-        <script>
-            // Add theme toggle functionality
-            function toggleTheme() {
-                const html = document.documentElement;
-                const currentTheme = html.getAttribute('data-theme');
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                
-                html.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                
-                // Update button text and icon
-                document.getElementById('theme-icon').textContent = newTheme === 'light' ? '🌞' : '🌙';
-                document.getElementById('theme-text').textContent = newTheme === 'light' ? 'Dark Mode' : 'Light Mode';
-
-                // Notify chat iframe about theme change
-                const chatFrame = document.querySelector('.chat-section');
-                chatFrame.contentWindow.postMessage({ type: 'themeChange', theme: newTheme }, '*');
+        async function fetchUsername() {
+          try {
+            const response = await fetch("get_username.php");
+            const data = await response.json();
+            if (data.success) {
+              document.getElementById("welcomeUsername").textContent =
+                data.username;
+              document.getElementById("profileIcon").textContent = data.username
+                .charAt(0)
+                .toUpperCase();
             }
+          } catch (error) {
+            console.error("Error fetching username:", error);
+            document.getElementById("welcomeUsername").textContent = "Teacher";
+          }
+        }
 
-            // Initialize theme from localStorage
-            document.addEventListener('DOMContentLoaded', () => {
-                const savedTheme = localStorage.getItem('theme') || 'light';
-                document.documentElement.setAttribute('data-theme', savedTheme);
-                document.getElementById('theme-icon').textContent = savedTheme === 'light' ? '🌞' : '🌙';
-                document.getElementById('theme-text').textContent = savedTheme === 'light' ? 'Dark Mode' : 'Light Mode';
+        fetchUsername();
 
-                // Add username fetching function
-                async function fetchUsername() {
-                    try {
-                        const response = await fetch('get_username.php');
-                        const data = await response.json();
-                        if (data.success) {
-                            document.getElementById('welcomeUsername').textContent = data.username;
-                            // Set profile icon to first letter of username
-                            document.getElementById('profileIcon').textContent = data.username.charAt(0).toUpperCase();
-                        }
-                    } catch (error) {
-                        console.error('Error fetching username:', error);
-                        document.getElementById('welcomeUsername').textContent = 'Teacher';
-                    }
-                }
+        const attendanceForm = document.getElementById("attendance-form");
+        const sessionStatus = document.getElementById("session-status");
 
-                // Call fetchUsername when page loads
-                fetchUsername();
+        document.getElementById("date").valueAsDate = new Date();
 
-                const attendanceForm = document.getElementById('attendance-form');
-                const sessionStatus = document.getElementById('session-status');
+        checkActiveSession();
 
-                // Set default date to today
-                document.getElementById('date').valueAsDate = new Date();
+        attendanceForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
 
-                // Check for active session on load
-                checkActiveSession();
+          const formData = new FormData(attendanceForm);
+          formData.append("action", "create");
 
-                attendanceForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
+          try {
+            const response = await fetch("attendance_management.php", {
+              method: "POST",
+              body: formData,
+              credentials: "include",
+            });
 
-                    const formData = new FormData(attendanceForm);
-                    formData.append('action', 'create');
+            const data = await response.json();
+            if (data.success) {
+              sessionStatus.innerHTML = `<div style="color: green;">${data.message}</div>`;
+              window.location.href = "../10 - Qr Genration/qr.html";
+            } else {
+              sessionStatus.innerHTML = `<div style="color: red;">${data.error}</div>`;
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            sessionStatus.innerHTML =
+              '<div style="color: red;">Failed to create session</div>';
+          }
+        });
 
-                    try {
-                        const response = await fetch('attendance_management.php', {
-                            method: 'POST',
-                            body: formData,
-                            credentials: 'include' // Add this to ensure cookies/session are sent
-                        });
+        async function checkActiveSession() {
+          try {
+            const formData = new FormData();
+            formData.append("action", "get_active");
 
-                        const data = await response.json();
-                        if (data.success) {
-                            sessionStatus.innerHTML = `<div style="color: green;">${data.message}</div>`;
-                            // After successful session creation, redirect to QR page
-                            window.location.href = '../10 - Qr Genration/qr.html';
-                        } else {
-                            sessionStatus.innerHTML = `<div style="color: red;">${data.error}</div>`;
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        sessionStatus.innerHTML = '<div style="color: red;">Failed to create session</div>';
-                    }
-                });
+            const response = await fetch("attendance_management.php", {
+              method: "POST",
+              body: formData,
+              credentials: "include",
+            });
 
-                async function checkActiveSession() {
-                    try {
-                        const formData = new FormData();
-                        formData.append('action', 'get_active');
-
-                        const response = await fetch('attendance_management.php', {
-                            method: 'POST',
-                            body: formData,
-                            credentials: 'include' // Add this to ensure cookies/session are sent
-                        });
-
-                        const data = await response.json();
-                        if (data.success) {
-                            sessionStatus.innerHTML = `
+            const data = await response.json();
+            if (data.success) {
+              sessionStatus.innerHTML = `
                             <div style="color: green; margin-top: 1rem;">
                                 Active session: ${data.session.date} ${data.session.start_time} - ${data.session.end_time}
                                 <button onclick="closeSession(${data.session.session_id})">Close Session</button>
                                 <a href="../10 - Qr Genration/qr.html" class="btn">Generate QR Code</a>
                             </div>`;
-                            attendanceForm.style.display = 'none';
-                        } else {
-                            attendanceForm.style.display = 'block';
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                    }
-                }
+              attendanceForm.style.display = "none";
+            } else {
+              attendanceForm.style.display = "block";
+            }
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        }
 
-                window.closeSession = async (sessionId) => {
-                    try {
-                        const formData = new FormData();
-                        formData.append('action', 'close');
-                        formData.append('session_id', sessionId);
+        window.closeSession = async (sessionId) => {
+          try {
+            const formData = new FormData();
+            formData.append("action", "close");
+            formData.append("session_id", sessionId);
 
-                        const response = await fetch('attendance_management.php', {
-                            method: 'POST',
-                            body: formData,
-                            credentials: 'include' // Add this to ensure cookies/session are sent
-                        });
+            const response = await fetch("attendance_management.php", {
+              method: "POST",
+              body: formData,
+              credentials: "include",
+            });
 
-                        const data = await response.json();
-                        if (data.success) {
-                            sessionStatus.innerHTML = `<div style="color: green;">${data.message}</div>`;
-                            attendanceForm.style.display = 'block';
-                        } else {
-                            sessionStatus.innerHTML = `<div style="color: red;">${data.error}</div>`;
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        sessionStatus.innerHTML = '<div style="color: red;">Failed to close session</div>';
-                    }
-                };
+            const data = await response.json();
+            if (data.success) {
+              sessionStatus.innerHTML = `<div style="color: green;">${data.message}</div>`;
+              attendanceForm.style.display = "block";
+            } else {
+              sessionStatus.innerHTML = `<div style="color: red;">${data.error}</div>`;
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            sessionStatus.innerHTML =
+              '<div style="color: red;">Failed to close session</div>';
+          }
+        };
 
-                // Add this new function to load students
-                async function loadStudents() {
-                    const loadingStatus = document.getElementById('loading-status');
-                    const tbody = document.getElementById('students-table-body');
-                    
-                    try {
-                        loadingStatus.textContent = 'Loading students...';
-                        const response = await fetch('get_students.php');
-                        const data = await response.json();
-                        
-                        if (data.success && data.data.length > 0) {
-                            tbody.innerHTML = data.data.map(student => `
+        async function loadStudents() {
+          const loadingStatus = document.getElementById("loading-status");
+          const tbody = document.getElementById("students-table-body");
+
+          try {
+            loadingStatus.textContent = "Loading students...";
+            const response = await fetch("get_students.php");
+            const data = await response.json();
+
+            if (data.success && data.data.length > 0) {
+              tbody.innerHTML = data.data
+                .map(
+                  (student) => `
                                 <tr>
                                     <td>${student.id}</td>
                                     <td>${student.name}</td>
@@ -262,85 +276,88 @@
                                     <td>${student.total_absent}</td>
                                     <td>${student.final_score}</td>
                                 </tr>
-                            `).join('');
-                            loadingStatus.textContent = `Loaded ${data.data.length} students`;
-                        } else {
-                            tbody.innerHTML = '<tr><td colspan="6">No students found</td></tr>';
-                            loadingStatus.textContent = 'No students found';
-                        }
-                    } catch (error) {
-                        console.error('Error loading students:', error);
-                        tbody.innerHTML = '<tr><td colspan="6">Error loading student data</td></tr>';
-                        loadingStatus.textContent = 'Error loading students';
-                    }
-                }
+                            `
+                )
+                .join("");
+              loadingStatus.textContent = `Loaded ${data.data.length} students`;
+            } else {
+              tbody.innerHTML =
+                '<tr><td colspan="6">No students found</td></tr>';
+              loadingStatus.textContent = "No students found";
+            }
+          } catch (error) {
+            console.error("Error loading students:", error);
+            tbody.innerHTML =
+              '<tr><td colspan="6">Error loading student data</td></tr>';
+            loadingStatus.textContent = "Error loading students";
+          }
+        }
 
-                // Load students when page loads
-                loadStudents();
+        loadStudents();
 
-                // Reload students every minute
-                setInterval(loadStudents, 60000);
+        setInterval(loadStudents, 60000);
 
-                // Add announcement handling
-                const announcementText = document.getElementById('announcement-text');
-                const postButton = document.getElementById('post-announcement');
-                const statusDiv = document.getElementById('announcement-status');
+        const announcementText = document.getElementById("announcement-text");
+        const postButton = document.getElementById("post-announcement");
+        const statusDiv = document.getElementById("announcement-status");
 
-                postButton.addEventListener('click', async () => {
-                    if (!announcementText.value.trim()) {
-                        statusDiv.innerHTML = '<div style="color: red;">Please write an announcement first</div>';
-                        return;
-                    }
+        postButton.addEventListener("click", async () => {
+          if (!announcementText.value.trim()) {
+            statusDiv.innerHTML =
+              '<div style="color: red;">Please write an announcement first</div>';
+            return;
+          }
 
-                    try {
-                        const response = await fetch('make_announcement.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                content: announcementText.value.trim()
-                            })
-                        });
-
-                        const data = await response.json();
-                        if (data.success) {
-                            statusDiv.innerHTML = '<div style="color: green;">Announcement posted successfully!</div>';
-                            announcementText.value = ''; // Clear the textarea
-                        } else {
-                            statusDiv.innerHTML = `<div style="color: red;">${data.error}</div>`;
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        statusDiv.innerHTML = '<div style="color: red;">Failed to post announcement</div>';
-                    }
-                });
-
-                // Add this function to load statistics
-                async function loadStatistics() {
-                    try {
-                        const response = await fetch('statistic.php');
-                        const data = await response.json();
-                        
-                        if (data.success) {
-                            document.getElementById('week-progress').textContent = data.stats.week + '%';
-                            document.getElementById('month-progress').textContent = data.stats.month + '%';
-                            document.getElementById('semester-progress').textContent = data.stats.semester + '%';
-                        } else {
-                            console.error('Failed to load statistics:', data.error);
-                        }
-                    } catch (error) {
-                        console.error('Error loading statistics:', error);
-                    }
-                }
-
-                // Load statistics when page loads
-                loadStatistics();
-
-                // Reload statistics every 5 minutes
-                setInterval(loadStatistics, 300000);
+          try {
+            const response = await fetch("make_announcement.php", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                content: announcementText.value.trim(),
+              }),
             });
-        </script>
-    </body>
 
+            const data = await response.json();
+            if (data.success) {
+              statusDiv.innerHTML =
+                '<div style="color: green;">Announcement posted successfully!</div>';
+              announcementText.value = "";
+            } else {
+              statusDiv.innerHTML = `<div style="color: red;">${data.error}</div>`;
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            statusDiv.innerHTML =
+              '<div style="color: red;">Failed to post announcement</div>';
+          }
+        });
+
+        async function loadStatistics() {
+          try {
+            const response = await fetch("statistic.php");
+            const data = await response.json();
+
+            if (data.success) {
+              document.getElementById("week-progress").textContent =
+                data.stats.week + "%";
+              document.getElementById("month-progress").textContent =
+                data.stats.month + "%";
+              document.getElementById("semester-progress").textContent =
+                data.stats.semester + "%";
+            } else {
+              console.error("Failed to load statistics:", data.error);
+            }
+          } catch (error) {
+            console.error("Error loading statistics:", error);
+          }
+        }
+
+        loadStatistics();
+
+        setInterval(loadStatistics, 300000);
+      });
+    </script>
+  </body>
 </html>

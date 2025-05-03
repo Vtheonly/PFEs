@@ -12,7 +12,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $current_user_id = $_SESSION['user_id'];
 
-// First, get the current user's role
+
 $role_query = "SELECT role FROM Users WHERE user_id = ?";
 $stmt = $conn->prepare($role_query);
 $stmt->bind_param("i", $current_user_id);
@@ -20,14 +20,14 @@ $stmt->execute();
 $role_result = $stmt->get_result();
 $user_role = $role_result->fetch_assoc()['role'];
 
-// Modify query based on user role
+
 if ($user_role === 'teacher') {
-    // Teachers can see all users
+    
     $users_query = "SELECT DISTINCT u.user_id, u.name, u.role 
                     FROM Users u 
                     WHERE u.user_id != ?";
 } else {
-    // Students can only see teachers
+    
     $users_query = "SELECT DISTINCT u.user_id, u.name, u.role 
                     FROM Users u 
                     WHERE u.role = 'teacher'";
@@ -49,7 +49,7 @@ while ($row = $users_result->fetch_assoc()) {
     );
 }
 
-// If a specific user conversation is requested
+
 if (isset($_GET['user_id'])) {
     $other_user_id = $_GET['user_id'];
     
