@@ -1,0 +1,32 @@
+<!-- app/src/main/res/values-night/themes.xml -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.MyApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/website_teal_primary</item> <!-- Or a slightly adjusted teal for dark mode -->
+        <item name="colorPrimaryVariant">@color/website_teal_dark</item>
+        <item name="colorOnPrimary">@color/white</item> <!-- Ensure good contrast -->
+
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/website_teal_light</item>
+        <item name="colorSecondaryVariant">@color/website_teal_dark</item>
+        <item name="colorOnSecondary">@color/black</item> <!-- Ensure good contrast -->
+
+        <!-- Status bar color (colorPrimaryVariant is often used by default) -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Dark themes usually have light status bar icons -->
+        <!-- <item name="android:windowLightStatusBar" tools:targetApi="m">false</item> -->
+
+        <!-- Dark Theme Specific Backgrounds -->
+        <item name="android:colorBackground">@color/material_grey_900</item> <!-- Example dark background -->
+        <item name="colorSurface">@color/material_grey_800</item> <!-- Example dark surface for cards -->
+        <item name="colorOnBackground">@color/text_primary_light</item>
+        <item name="colorOnSurface">@color/text_primary_light</item>
+
+        <item name="colorError">@color/design_default_color_error</item> <!-- Material default error for dark -->
+        <item name="colorOnError">@color/black</item>
+
+        <!-- Customize other attributes as needed -->
+        <item name="toolbarStyle">@style/Widget.App.Toolbar</item>
+        <item name="materialButtonStyle">@style/Widget.App.Button</item>
+    </style>
+</resources>

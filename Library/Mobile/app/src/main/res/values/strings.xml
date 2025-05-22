@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">BiblioTech</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="logout">Logout</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="matricule">Matricule</string>
+    <string name="role">Role</string>
+    <string name="student">Student</string>
+    <string name="teacher">Teacher</string>
+    <string name="dashboard_welcome">Welcome, %s!</string>
+    <string name="suggest_book">Suggest a Book</string>
+    <string name="reserve_book">Reserve a Book</string>
+    <string name="send_message_to_librarian">Send Message to Librarian</string>
+    <string name="book_title">Book Title</string>
+    <string name="author">Author</string>
+    <string name="category">Category</string>
+    <string name="submit_suggestion">Submit Suggestion</string>
+    <string name="book_id_to_reserve">Book ID to Reserve</string>
+    <string name="submit_reservation">Submit Reservation</string>
+    <string name="your_message">Your Message</string>
+    <string name="send_message">Send Message</string>
+    <string name="go_to_register">Don\'t have an account? Register</string>
+    <string name="go_to_login">Already have an account? Login</string>
+    <string name="loading">Loading...</string>
+</resources>

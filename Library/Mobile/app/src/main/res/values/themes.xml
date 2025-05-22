@@ -1,0 +1,72 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.MyApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/website_teal_primary</item>
+        <item name="colorPrimaryVariant">@color/website_teal_dark</item> <!-- Used for status bar by default -->
+        <item name="colorOnPrimary">@color/white</item> <!-- Text/icons on primary color surfaces -->
+
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/website_teal_light</item> <!-- Or another accent color -->
+        <item name="colorSecondaryVariant">@color/website_teal_dark</item> <!-- Or a darker version of your secondary -->
+        <item name="colorOnSecondary">@color/black</item> <!-- Text/icons on secondary color surfaces -->
+
+        <!-- Status bar color. -->
+        <!-- colorPrimaryVariant is often used by default, but you can explicitly set it -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- For light status bar icons if your status bar color is light: -->
+        <!-- <item name="android:windowLightStatusBar" tools:targetApi="m">true</item> -->
+        <!-- For dark status bar icons if your status bar color is dark (default for dark backgrounds): -->
+        <!-- <item name="android:windowLightStatusBar" tools:targetApi="m">false</item> -->
+
+
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/white</item> <!-- Or your desired main background -->
+        <item name="colorSurface">@color/white</item> <!-- Cards, Sheets, Menus -->
+        <item name="colorOnBackground">@color/text_primary_dark</item>
+        <item name="colorOnSurface">@color/text_primary_dark</item>
+
+        <!-- Error color -->
+        <item name="colorError">@color/red_error</item>
+        <item name="colorOnError">@color/white</item>
+
+        <!-- Customize other attributes as needed -->
+        <!-- Example: Toolbar Style -->
+        <item name="toolbarStyle">@style/Widget.App.Toolbar</item>
+
+        <!-- Example: Material Button Style (to ensure they pick up primary/secondary colors) -->
+        <item name="materialButtonStyle">@style/Widget.App.Button</item>
+
+        <!-- If you use Floating Action Buttons -->
+        <!-- <item name="floatingActionButtonStyle">@style/Widget.App.FloatingActionButton</item> -->
+
+    </style>
+
+    <!-- Specific Widget Styles (Optional, but good for consistency) -->
+    <style name="Widget.App.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <!-- By default, inherits colorPrimary for background, colorOnPrimary for title/icons -->
+        <!-- You can override if needed: -->
+        <!-- <item name="android:background">@color/website_teal_primary</item> -->
+        <!-- <item name="titleTextColor">@color/white</item> -->
+        <!-- <item name="navigationIconTint">@color/white</item> -->
+        <!-- <item name="iconTint">@color/white</item> -->
+    </style>
+
+    <style name="Widget.App.Button" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <!-- Add other button attributes like corner radius, padding if desired globally -->
+    </style>
+
+    <!-- Example for FloatingActionButton if you use it -->
+    <!--
+    <style name="Widget.App.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">?attr/colorSecondary</item>
+        <item name="tint">?attr/colorOnSecondary</item>
+    </style>
+    -->
+
+    <!-- You might have a separate theme for specific activities if needed, ensure it also inherits correctly -->
+    <!-- e.g., <style name="Theme.MyApplication.Login" parent="Theme.MaterialComponents.DayNight.NoActionBar"> ... </style> -->
+
+</resources>

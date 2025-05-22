@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".ReserveBookActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reserve_book"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <EditText
+        android:id="@+id/editTextSearchQuery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Title, Author, or Category"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search by:"
+        android:layout_marginTop="8dp"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroupSearchCriteria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+        <RadioButton
+            android:id="@+id/radioButtonTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:checked="true"/>
+        <RadioButton
+            android:id="@+id/radioButtonAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Author"
+            android:layout_marginStart="16dp"/>
+        <RadioButton
+            android:id="@+id/radioButtonCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category"
+            android:layout_marginStart="16dp"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/buttonSearchBooks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Search Books"
+        android:layout_marginBottom="16dp"/>
+
+    <ProgressBar
+        android:id="@+id/progressBarSearchBooks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/textViewNoBooksFound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No books found for your search."
+        android:visibility="gone"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewBooks"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:listitem="@layout/item_book"/>
+
+    <ProgressBar
+        android:id="@+id/progressBarReserve"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>

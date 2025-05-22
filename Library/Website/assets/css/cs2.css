@@ -1,0 +1,506 @@
+.catalogue-page .catalog-container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 2rem 3rem;
+}
+
+.catalogue-page h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.catalogue-page .catalog-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    justify-content: center;
+}
+
+.catalogue-page .form-row {
+    display: flex;
+    flex-direction: column;
+    min-width: 220px;
+    position: relative;
+}
+
+.catalogue-page .form-row label {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #00b894;
+}
+
+.catalogue-page .form-row input {
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    border: 1.5px solid #b2bec3;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    background: #f9fafb;
+    transition: border-color 0.3s ease;
+}
+
+.catalogue-page .form-row input:focus {
+    border-color: #00b894;
+    outline: none;
+    background: #e6f7f1;
+}
+
+.catalogue-page .btn-submit {
+    background: #00b894;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 1.7rem;
+    align-self: flex-end;
+    transition: background 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 184, 148, 0.4);
+}
+
+.catalogue-page .btn-submit:hover {
+    background: #098c6e;
+    box-shadow: 0 6px 16px rgba(9, 140, 110, 0.6);
+}
+
+.catalogue-page .catalog-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    margin-top: 1.5rem;
+    background: transparent;
+}
+
+.catalogue-page .catalog-table th,
+.catalogue-page .catalog-table td {
+    padding: 1rem 1.2rem;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.catalogue-page .catalog-table th {
+    background: #00b894;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-radius: 12px 12px 0 0;
+}
+
+.catalogue-page .catalog-table tbody tr {
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.catalogue-page .catalog-table tbody tr:hover {
+    background: #e6f7f1;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 184, 148, 0.3);
+}
+
+.catalogue-page .status {
+    padding: 0.4em 1em;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 0.95em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+}
+
+.catalogue-page .status.Disponible {
+    background: #d4fbe7;
+    color: #098c6e;
+    border: 1px solid #00b894;
+}
+
+.catalogue-page .status.Retard,
+.catalogue-page .status.Indisponible {
+    background: #ffe6e6;
+    color: #d63031;
+    border: 1px solid #d63031;
+}
+
+.catalogue-page .status.Disponible::before {
+    content: "✓";
+    font-weight: 900;
+    color: #00b894;
+}
+
+.catalogue-page .status.Indisponible::before {
+    content: "✗";
+    font-weight: 900;
+    color: #d63031;
+}
+
+.catalogue-page .no-results {
+    color: #636e72;
+    text-align: center;
+    margin: 3rem 0;
+    font-size: 1.2em;
+    font-style: italic;
+}
+
+.catalogue-page .alert {
+    background: #ffe6e6;
+    color: #d63031;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 10px rgba(214, 48, 49, 0.3);
+}
+
+@media (max-width: 700px) {
+    .catalogue-page .catalog-container {
+        padding: 1.5rem 1rem;
+    }
+    .catalogue-page .catalog-table th,
+    .catalogue-page .catalog-table td {
+        padding: 0.8rem 0.6rem;
+        font-size: 0.95em;
+    }
+    .catalogue-page .catalog-form {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .catalogue-page .form-row {
+        min-width: 100%;
+    }
+    .catalogue-page .btn-submit {
+        width: 100%;
+        margin-top: 0;
+        padding: 1rem;
+        font-size: 1.2rem;
+    }
+}
+
+.historique-reservations-page {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.historique-reservations-page .reservations-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 800px;
+    text-align: center;
+}
+
+.historique-reservations-page h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.historique-reservations-page table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.historique-reservations-page th,
+.historique-reservations-page td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.historique-reservations-page th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.historique-reservations-page tr:hover {
+    background-color: #f5f5f5;
+}
+
+.historique-reservations-page .status {
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.historique-reservations-page .status.En_attente {
+    background-color: #ffc107;
+}
+
+.historique-reservations-page .status.Confirmée , .status.Empruntée{
+    background-color: rgb(2, 127, 31);
+}
+
+.historique-reservations-page .status.Annulée,
+.historique-reservations-page .status.Retard {
+    background-color: rgb(174, 13, 29);
+}
+
+
+.historique-reservations-page .no-reservations {
+    font-style: italic;
+    color: #777;
+}
+.message-page {
+    font-family: Arial, sans-serif;
+    font-size: 0.85rem;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 10px;
+}
+
+.message-page .message-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
+
+.message-page h2 {
+    font-size: 1.2rem;
+    color: #098c6e;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.message-page .messenger-box {
+    background: #f5f5f5;
+    border-radius: 6px;
+    padding: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.message-page .message-row {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.message-page .message-row.sent {
+    justify-content: flex-end;
+}
+
+.message-page .message-row.received {
+    justify-content: flex-start;
+}
+
+.message-page .message-content {
+    background: #e9f7ef;
+    color: #333;
+    padding: 8px 12px;
+    border-radius: 6px;
+    max-width: 70%;
+    font-size: 0.85rem;
+}
+
+.message-page .message-row.sent .message-content {
+    background: #d4f7e4;
+    color: #098c6e;
+}
+
+.message-page .message-date {
+    font-size: 0.7rem;
+    color: #999;
+    margin-top: 5px;
+    text-align: right;
+}
+
+.message-page .message-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message-page .message-form textarea {
+    padding: 8px;
+    font-size: 0.85rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    resize: vertical;
+}
+
+.message-page .btn-submit {
+    padding: 8px;
+    font-size: 0.85rem;
+    background: #098c6e;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.message-page .btn-submit:hover {
+    background: #07664a;
+}
+
+.message-page .alert {
+    padding: 8px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.message-page .alert-success {
+    background: #d4f7e4;
+    color: #098c6e;
+}
+
+.message-page .alert-error {
+    background: #ffe6e6;
+    color: #d63031;
+}
+
+.message-page .no-message {
+    font-style: italic;
+    color: #777;
+}
+.suggestion-page {
+    font-family: Arial, sans-serif;
+    font-size: 0.85rem;
+    background: #f5f7fa;
+    margin: 0;
+    padding: 10px;
+    color: #34495e;
+}
+
+.suggestion-page .container-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.suggestion-page .container {
+    flex: 1;
+    min-width: 280px;
+    background: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.suggestion-page h2 {
+    color: #098c6e;
+    font-size: 1.2em;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.suggestion-page form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.suggestion-page label {
+    font-weight: 600;
+    color: #34495e;
+}
+
+.suggestion-page input[type="text"] {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+    border: 1px solid #d1d8e0;
+    border-radius: 6px;
+}
+
+.suggestion-page button[type="submit"] {
+    background-color: #098c6e;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.suggestion-page button[type="submit"]:hover {
+    background-color: #07664a;
+}
+
+.suggestion-page .alert {
+    padding: 0.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+}
+
+.suggestion-page .alert.success {
+    background-color: #d4f7e4;
+    color: #098c6e;
+}
+
+.suggestion-page .alert.error {
+    background-color: #ffe6e6;
+    color: #d63031;
+}
+
+.suggestion-page table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+}
+
+.suggestion-page table th,
+.suggestion-page table td {
+    padding: 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid #d1d8e0;
+}
+
+.suggestion-page table th {
+    background-color: #098c6e;
+    color: white;
+    font-weight: 600;
+}
+
+.suggestion-page table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.suggestion-page table tr:hover {
+    background-color: #e6f2eb;
+}
+
+.suggestion-page .status-badge {
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.suggestion-page .status-badge.valide {
+    background: #d4f7e4;
+    color: #098c6e;
+}
+
+.suggestion-page .status-badge.refuse {
+    background: #ffe6e6;
+    color: #d63031;
+}
+
+.suggestion-page .status-badge.en_attente {
+    background: #fff8e1;
+    color: #b58b00;
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Your Website's Teal Colors -->
+    <color name="website_teal_primary">#008080</color> <!-- Replace with your exact primary teal -->
+    <color name="website_teal_dark">#006666</color>   <!-- Replace with your exact darker teal (for status bar, etc.) -->
+    <color name="website_teal_light">#40E0D0</color>  <!-- Replace with your exact lighter teal (for accents if needed) -->
+
+    <!-- Standard Colors (keep or adjust as needed) -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color> <!-- Default Material Teal, you might replace this -->
+    <color name="teal_700">#FF018786</color> <!-- Default Material Teal Dark, you might replace this -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="light_gray">#D3D3D3</color>
+    <color name="dark_gray">#A9A9A9</color>
+    <color name="red_error">#D32F2F</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary_dark">#DE000000</color> <!-- 87% black -->
+    <color name="text_secondary_dark">#8A000000</color> <!-- 54% black -->
+    <color name="text_primary_light">#FFFFFFFF</color> <!-- White for dark backgrounds -->
+    <color name="text_secondary_light">#B3FFFFFF</color> <!-- 70% white for dark backgrounds -->
+</resources>

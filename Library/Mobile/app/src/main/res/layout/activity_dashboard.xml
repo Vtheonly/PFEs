@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal"
+    tools:context=".DashboardActivity">
+
+    <TextView
+        android:id="@+id/textViewWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="48dp"
+        tools:text="Welcome, User!"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSuggestBook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/suggest_book"
+        android:paddingVertical="12dp"
+        android:layout_marginBottom="16dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonReserveBook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/reserve_book"
+        android:paddingVertical="12dp"
+        android:layout_marginBottom="16dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonViewReservationHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="12dp"
+        android:text="Reservations History"
+        android:layout_marginBottom="16dp"/>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSendMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/send_message_to_librarian"
+        android:paddingVertical="12dp"
+        android:layout_marginBottom="48dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonLogout"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/logout"
+        android:paddingVertical="12dp"
+        android:paddingHorizontal="24dp"
+        android:layout_gravity="center_horizontal"/>
+
+</LinearLayout>
